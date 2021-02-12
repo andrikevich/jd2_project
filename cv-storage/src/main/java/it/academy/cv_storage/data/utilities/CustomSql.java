@@ -5,6 +5,9 @@ public abstract  class CustomSql {
 	protected StringBuilder startQuery = null;
 	protected StringBuilder whereQuery = null;
 	
+	// class where we using reflection will be retrieved data
+	protected Class<?> clsFrom = null;
+	
 	public abstract String getQuery();
 
 }

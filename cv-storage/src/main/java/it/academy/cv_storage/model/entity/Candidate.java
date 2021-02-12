@@ -28,7 +28,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table
+@Table (name = "candidate")
 public class Candidate implements Serializable {
 
 	private static final long serialVersionUID = 1L;
