@@ -1,17 +1,15 @@
 package it.academy.cv_storage.data.utilities;
 
 import static org.junit.Assert.assertEquals;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import it.academy.cv_storage.config.AppConfig;
 import it.academy.cv_storage.exception.ClassHasNoCorrectAnnotation;
 import it.academy.cv_storage.exception.IncorrectArgumentException;
+import it.academy.cv_storage.exception.NullClassEntityExeption;
 import it.academy.cv_storage.exception.StartSqlSentenceExeption;
 import it.academy.cv_storage.model.entity.Candidate;
 
@@ -22,22 +20,79 @@ public class CustomSqlSelectTest {
 	@Autowired
 	CustomSqlSelect customSelector;
 	
-	
+	// -------------  selectAllFrom -----------------
 	
 	@Test
-	public void selectAllTest() throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation  {
+	public void selectAllTest() throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NullClassEntityExeption  {
 		String query = customSelector.selectAllFrom(Candidate.class).getQuery();
 		assertEquals("SELECT * from candidate".trim(), query.trim());
 	
 	}
 	
 	
+	@Test(expected = ClassHasNoCorrectAnnotation.class)
+	public void selectAllFromWrongClassTest() throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NullClassEntityExeption  {
+		customSelector.selectAllFrom(String.class).getQuery();
+	
+	}
+	
+	@Test(expected = NullClassEntityExeption.class)
+	public void selectAllFromNullTest() throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NullClassEntityExeption  {
+		customSelector.selectAllFrom(null).getQuery();
+	
+	}
+	
+	
+	// -------------  selectFrom -----------------	
+	
+	@Test (expected = ClassHasNoCorrectAnnotation.class)
+	public void selectFromWithIncorrectClass() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.selectFrom(String.class,"first_name").getQuery();
+	
+	}
 	
 	@Test
-	public void selectFromWithOneCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException  {
+	public void selectFromWithOneCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		String query = customSelector.selectFrom(Candidate.class,"first_name").getQuery();
 		assertEquals("SELECT  FIRST_NAME from candidate".trim(), query.trim());
 	
+	}
+	
+	@Test (expected = IncorrectArgumentException.class)
+	public void selectFromWithOneNullParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.selectFrom(Candidate.class,null).getQuery();
+	}
+	
+	@Test(expected = IncorrectArgumentException.class)
+	public void selectFromWithOneEmptyParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.selectFrom(Candidate.class,"").getQuery();
+	}
+	
+	@Test
+	public void selectFromWithTwoCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		String query = customSelector.selectFrom(Candidate.class,"first_name","lastName").getQuery();
+		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+	
+	}
+	@Test
+	public void selectFromWithTwoCorrectParameterWithoutCase() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		String query = customSelector.selectFrom(Candidate.class,"fIRst_name","lastname").getQuery();
+		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+	}
+	
+	@Test(expected = IncorrectArgumentException.class)
+	public void selectFromWithTwoParameterSecondNull() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.selectFrom(Candidate.class,"first_name",null).getQuery();
+	}
+	
+	@Test(expected = IncorrectArgumentException.class)
+	public void selectFromWithTwoParameterSecondEmpty() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.selectFrom(Candidate.class,"first_name","").getQuery();
+	}
+	
+	@Test(expected = IncorrectArgumentException.class)
+	public void selectFromWithTwoParameterSecondIncorrect() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.selectFrom(Candidate.class,"first_name","987").getQuery();
 	}
 
 }
