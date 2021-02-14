@@ -17,7 +17,8 @@ import it.academy.cv_storage.exception.StartSqlSentenceExeption;
 @Scope("prototype")
 public class CustomSqlSelect extends CustomSql {
 	
-	
+
+	private boolean isOrderByPresent = false;
 	
 	//SELECT * from tableWithClassName
 	public <T> CustomSqlSelect selectAllFrom(Class<T> clsFrom) throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NullClassEntityExeption {
@@ -75,12 +76,18 @@ public class CustomSqlSelect extends CustomSql {
 					"The beginning of SQL query is incorrect. You should use selectAllFrom() or selectFrom() first. Without WHERE");
 		
 	}
-	
+
+	// ------------------ WHERE --------------------------------------
 	
 	public CustomSqlCondition where() throws StartSqlSentenceExeption {
 		if(startQuery == null) {
 			throw new StartSqlSentenceExeption(
 				"The beginning of SQL query is incorrect. You should use selectAllFrom() or selectFrom() first");
+		}
+		
+		if(isOrderByPresent) {
+			throw new StartSqlSentenceExeption(
+				"WHERE can't be applyed after ORDER BY. You should use first WHERE and then ORDER BY");
 		}
 
 			startQuery.append(" WHERE ");
@@ -88,5 +95,35 @@ public class CustomSqlSelect extends CustomSql {
 			customSqlCondition.clsFrom = this.clsFrom;
 		return customSqlCondition;
 	}
+	
+	// ------------------ ORDERBY --------------------------------------
+	public CustomSqlSelect orderBy(String field, OrderBySortingType sortingType) throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NullClassEntityExeption, NoSuchFieldException, SecurityException, IncorrectArgumentException {
+		if(startQuery!= null && startQuery.toString().length() !=0 ) {
+			ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
+			String correctParamName = classInfo.getSelectParameter(field);
+
+			if(!isOrderByPresent) {
+				startQuery.append(" ORDER BY ")
+						  .append(correctParamName)
+						  .append(" ")
+						  .append(sortingType.toString())
+						  .append(" ");
+				//flag to create ORDER BY from two or more argument of sorting
+				isOrderByPresent =true;
+			} else {
+				startQuery.append(", ")
+						  .append(correctParamName)
+						  .append(" ")
+						  .append(sortingType.toString())
+						  .append(" ");
+			}
+			
+			return this;
+		}else 
+			throw new StartSqlSentenceExeption(
+					"The beginning of SQL query is incorrect. You should use selectAllFrom() or selectFrom() first.");
+
+		}
+		
 
 }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Component
 @Scope("prototype")
 @NoArgsConstructor
-public class CustomSqlCondition extends CustomSql {
+public class CustomSqlCondition extends CustomSqlSelect {
 
 	private boolean conditionStarted = false;
 
@@ -58,11 +58,17 @@ public class CustomSqlCondition extends CustomSql {
 
 	}
 
-	// ------------- concatinators ------------------
+	// ------------- concatenators ------------------
 
 	public CustomSqlCondition or() throws StartSqlSentenceExeption {
-		return concatinate("OR");
+		return concatenate("OR");
 	}
+	
+	public CustomSqlCondition and() throws StartSqlSentenceExeption {
+		return concatenate("AND");
+	}
+	
+
 
 	@Override
 	public String getQuery() throws StartSqlSentenceExeption {
@@ -71,6 +77,8 @@ public class CustomSqlCondition extends CustomSql {
 		} else
 			throw new StartSqlSentenceExeption("You should finish you query with some condition");
 	}
+	
+	//----------- helper methods ------------------
 
 	private CustomSqlCondition conditionCreate(String paramName, String value, String operator)
 			throws ClassHasNoCorrectAnnotation, NullClassEntityExeption, NoSuchFieldException, StartSqlSentenceExeption,
@@ -79,7 +87,11 @@ public class CustomSqlCondition extends CustomSql {
 			ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
 			String correctParamName = classInfo.getSelectParameter(paramName);
 
-			startQuery.append(correctParamName).append(operator.toUpperCase()).append(value).append(" ");
+			startQuery.append(correctParamName)
+					  .append(operator.toUpperCase())
+					  .append("'")
+					  .append(value)
+					  .append("' ");
 			conditionStarted = true;
 			return this;
 		} else
@@ -87,7 +99,7 @@ public class CustomSqlCondition extends CustomSql {
 					"Previous conditional method was invoked. You can't invoke it again. You only can invoke concatenation conditions (or,  and, etc.)");
 	}
 
-	private CustomSqlCondition concatinate(String concatinator) throws StartSqlSentenceExeption {
+	private CustomSqlCondition concatenate(String concatinator) throws StartSqlSentenceExeption {
 		if (conditionStarted) {
 			startQuery.append(" ").append(concatinator.toUpperCase()).append(" ");
 			conditionStarted = false;

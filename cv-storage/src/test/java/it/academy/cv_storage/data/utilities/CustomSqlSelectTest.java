@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import it.academy.cv_storage.config.AppConfig;
@@ -18,6 +19,7 @@ import it.academy.cv_storage.model.entity.Candidate;
 public class CustomSqlSelectTest {
 
 	@Autowired
+	@Qualifier("customSqlSelect")
 	CustomSqlSelect customSelector;
 	
 	// -------------  selectAllFrom -----------------
@@ -94,5 +96,49 @@ public class CustomSqlSelectTest {
 	public void selectFromWithTwoParameterSecondIncorrect() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		customSelector.selectFrom(Candidate.class,"first_name","987").getQuery();
 	}
-
+	
+	// -------------  where -----------------	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void revokeWhereWithoutSelect() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.where();
+	}
+	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void revokeWhereAfterOrderBy() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
+					  .orderBy("firstName", OrderBySortingType.ASC)
+					  .where()
+					  .getQuery();
+	}
+	
+	// -------------  order by -----------------	
+	@Test
+	public void revokeOrderByOneArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		String query = 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
+					  				  .orderBy("firstName", OrderBySortingType.ASC)
+					  				  .getQuery();
+		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC".trim(), query.trim());
+	}
+	
+	@Test
+	public void revokeOrderByTwoArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		String query = 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
+					  				  .orderBy("firstName", OrderBySortingType.ASC)
+					  				  .orderBy("lastName", OrderBySortingType.ASC)
+					  				  .getQuery();
+		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC , LAST_NAME ASC".trim(), query.trim());
+	}
+	
+	@Test(expected = IncorrectArgumentException.class)
+	public void revokeOrderByOneNullArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
+					  .orderBy(null, OrderBySortingType.ASC)
+					  .getQuery();
+	}
+	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void revokeOrderByWithoutSelect() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.orderBy("firstName", OrderBySortingType.ASC)
+					  .getQuery();
+	}
 }

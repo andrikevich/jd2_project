@@ -2,6 +2,7 @@ package it.academy.cv_storage.app;
 
 
 import it.academy.cv_storage.data.utilities.CustomSqlSelect;
+import it.academy.cv_storage.data.utilities.OrderBySortingType;
 import it.academy.cv_storage.exception.ClassHasNoCorrectAnnotation;
 import it.academy.cv_storage.exception.IncorrectArgumentException;
 import it.academy.cv_storage.exception.NullClassEntityExeption;
@@ -27,7 +28,9 @@ public class TestMeCustomSQl {
 //			// ----------------2----------------------
 			CustomSqlSelect customSql2 = new CustomSqlSelect();
 			String query2 = customSql2.selectFrom
-					(Candidate.class,"firstName","middle_name").getQuery();
+					(Candidate.class,"firstName","middle_name")
+					.orderBy("firstName", OrderBySortingType.ASC)
+					.getQuery();
 			System.out.println(query2);
 //			
 			// ----------------3----------------------
@@ -37,6 +40,7 @@ public class TestMeCustomSQl {
 										.equal("firstName", "John")
 										.or()
 										.gt("lastName", "Brown")
+										.orderBy("firstName", OrderBySortingType.ASC)
 										.getQuery();
 			System.out.println(query3);
 			
