@@ -1,6 +1,11 @@
 package it.academy.cv_storage.app;
 
 
+import java.util.logging.Logger;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import it.academy.cv_storage.dao.CvDaoImpl;
 import it.academy.cv_storage.data.utilities.CustomSqlSelect;
 import it.academy.cv_storage.data.utilities.OrderBySortingType;
 import it.academy.cv_storage.exception.ClassHasNoCorrectAnnotation;
@@ -11,6 +16,12 @@ import it.academy.cv_storage.model.entity.Candidate;
 
 public class TestMeCustomSQl {
 	
+	@Autowired
+	static
+	CvDaoImpl dao;
+	
+	private static Logger logger = Logger.getLogger(TestMeCustomSQl.class.getName());
+	
 	public static void main(String[] args) {
 		
 	
@@ -19,9 +30,9 @@ public class TestMeCustomSQl {
 			CustomSqlSelect customSql1 = new CustomSqlSelect();
 			String query1 = customSql1.selectAllFrom(Candidate.class)
 										.where()
-										.equal("firstName", "John")
-										.or()
-										.equal("lastName", "Brown")
+										.equal("firstName", "Мария")
+										.and()
+										.equal("lastName", "Морская")
 										.getQuery();
 			System.out.println(query1);
 //			
@@ -43,6 +54,10 @@ public class TestMeCustomSQl {
 										.orderBy("firstName", OrderBySortingType.ASC)
 										.getQuery();
 			System.out.println(query3);
+			
+			
+				System.out.println(dao.getAllCandidateBySql(query1));
+			
 			
 			
 		} catch (StartSqlSentenceExeption | ClassHasNoCorrectAnnotation | NoSuchFieldException | SecurityException | IncorrectArgumentException | NullClassEntityExeption e) {

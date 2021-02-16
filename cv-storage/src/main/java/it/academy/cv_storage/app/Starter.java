@@ -47,10 +47,11 @@ public class Starter {
 //			candidate.addKnowledge(knowledge);
 //			session.persist(candidate);
 //			
-			Query createQuery = session.createSQLQuery("select * from candidate");
-
-			Candidate candidate = session.get(Candidate.class, "354b0bdb-691e-11eb-8bfa-a08cfda726f3");
-			System.out.println(candidate.getPhone());
+			Query createQuery = session.createSQLQuery("select * from candidate where FIRST_NAME='Мария'").addEntity(Candidate.class);
+			createQuery.list();
+			//Candidate candidate = session.get(Candidate.class, "354b0bdb-691e-11eb-8bfa-a08cfda726f3");
+		
+			System.out.println(createQuery.list());
 //			
 			session.getTransaction().commit();
 			

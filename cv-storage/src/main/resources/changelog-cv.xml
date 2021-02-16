@@ -150,8 +150,8 @@
 
 	<changeSet id="9" author="dmitry_an">
 		<sql>
-			INSERT IGNORE INTO `cv_storage`.`candidate` (ID, FIRST_NAME,
-			MIDDLE_NAME, LAST_NAME, BIRTH_DATE, GENDER)
+			INSERT IGNORE INTO `cv_storage`.`candidate` (ID,  LAST_NAME,
+			FIRST_NAME, MIDDLE_NAME, BIRTH_DATE, GENDER)
 			VALUES
 			('3cbd2faf-691c-11eb-8bfa-a08cfda726f3', 'Петров', 'Петр',
 			'Петрович', '1986-12-12', 'МУЖЧИНА'),

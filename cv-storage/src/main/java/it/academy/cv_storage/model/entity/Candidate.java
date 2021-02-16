@@ -26,8 +26,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @Entity
+@ToString
 @Table (name = "candidate")
 public class Candidate implements Serializable {
 
@@ -122,4 +122,8 @@ public class Candidate implements Serializable {
 		knowledge.add(theKnowledge);
 		theKnowledge.setCandidate(this);
 	}
+
+
+	
+	
 }

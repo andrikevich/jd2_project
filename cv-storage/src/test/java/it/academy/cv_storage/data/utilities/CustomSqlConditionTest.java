@@ -22,8 +22,10 @@ import it.academy.cv_storage.model.utilities.Gender;
 public class CustomSqlConditionTest {
 	
 	@Autowired
-	@Qualifier("customSqlSelect")
-	CustomSqlSelect customSelector;
+	@Qualifier("customSqlCondition")
+	CustomSqlCondition customSelector;
+	
+	//------------------ <positive-tests> ---------------------------
 
 	@Test
 	public void selectFromWhereOneEqual() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
@@ -67,4 +69,109 @@ public class CustomSqlConditionTest {
 									 .getQuery();
 		assertEquals("SELECT * from candidate  WHERE FIRST_NAME='John'  ORDER BY FIRST_NAME DESC".trim(), query.trim());
 	}
+	
+	//------------------ </positive-tests> ---------------------------
+	
+	//------------------ <negative-tests> ---------------------------
+	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void invokeWhereAfterOrderBy() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
+					  .orderBy("firstName", OrderBySortingType.ASC)
+					  .where()
+					  .getQuery();
+	}
+	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void invokeWhereWithoutConditions() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .getQuery();
+	}
+	
+	
+	@Test(expected = IncorrectArgumentException.class)
+	public void invokeWhereWithNullParamNameConditions() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .equal(null, "John")
+					  .getQuery();
+	}
+	@Test(expected = IncorrectArgumentException.class)
+	public void invokeWhereWithNullValueOfParamConditions() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .equal("firstName", null)
+					  .getQuery();
+	}
+	
+	@Test
+	public void invokeWhereWithEmptyValueOfParamConditions() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		String query = customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+									  .where()
+									  .equal("firstName", "")
+									  .getQuery();
+		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate  WHERE FIRST_NAME=''".trim(), query.trim());
+	}
+	
+	@Test(expected = IncorrectArgumentException.class)
+	public void invokeWhereWithEmptyParamName() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .equal("", "John")
+					  .getQuery();
+	}
+	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void invokeWhereWithDoubleConditionsWithoutConcat() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .equal("firstName", "John")
+					  .equal("lastName", "Carter")
+					  .getQuery();
+	}
+	
+	@Test(expected = IncorrectArgumentException.class)
+	public void invokeDoubleWhereWithCondit() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .equal("firstName", null)
+					  .where()
+					  .getQuery();
+	}
+	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void invokeDoubleWhere() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .where()
+					  .getQuery();
+	}
+	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void invokeConcatWithoutCondition() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .and()
+					  .getQuery();
+	}
+	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void invokeOrderByAfterWhere() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .orderBy("lastName", OrderBySortingType.ASC)
+					  .getQuery();
+	}
+	
+	@Test(expected = StartSqlSentenceExeption.class)
+	public void invokeOrderByAfterConcat() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
+					  .where()
+					  .equal("firstName", "John")
+					  .and()
+					  .orderBy("lastName", OrderBySortingType.ASC)
+					  .getQuery();
+	}
+	
 }

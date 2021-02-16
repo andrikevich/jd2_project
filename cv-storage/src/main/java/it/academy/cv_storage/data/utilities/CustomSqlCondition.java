@@ -58,6 +58,11 @@ public class CustomSqlCondition extends CustomSqlSelect {
 
 	}
 
+	public CustomSqlCondition like(String paramName, String wildcard) throws NoSuchFieldException, SecurityException,
+	StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption {
+return conditionCreate(paramName, wildcard, " LIKE ");
+
+}
 	// ------------- concatenators ------------------
 
 	public CustomSqlCondition or() throws StartSqlSentenceExeption {
@@ -84,6 +89,10 @@ public class CustomSqlCondition extends CustomSqlSelect {
 			throws ClassHasNoCorrectAnnotation, NullClassEntityExeption, NoSuchFieldException, StartSqlSentenceExeption,
 			IncorrectArgumentException {
 		if (!conditionStarted) {
+			if(value == null) {
+				throw new IncorrectArgumentException("It was inserted null instead of value of parameter");
+			}
+			
 			ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
 			String correctParamName = classInfo.getSelectParameter(paramName);
 

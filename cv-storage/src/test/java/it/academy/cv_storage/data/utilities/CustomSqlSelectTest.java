@@ -99,12 +99,12 @@ public class CustomSqlSelectTest {
 	
 	// -------------  where -----------------	
 	@Test(expected = StartSqlSentenceExeption.class)
-	public void revokeWhereWithoutSelect() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	public void invokeWhereWithoutSelect() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		customSelector.where();
 	}
 	
 	@Test(expected = StartSqlSentenceExeption.class)
-	public void revokeWhereAfterOrderBy() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	public void invokeWhereAfterOrderBy() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 	 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
 					  .orderBy("firstName", OrderBySortingType.ASC)
 					  .where()
@@ -113,7 +113,7 @@ public class CustomSqlSelectTest {
 	
 	// -------------  order by -----------------	
 	@Test
-	public void revokeOrderByOneArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	public void invokeOrderByOneArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		String query = 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
 					  				  .orderBy("firstName", OrderBySortingType.ASC)
 					  				  .getQuery();
@@ -121,7 +121,7 @@ public class CustomSqlSelectTest {
 	}
 	
 	@Test
-	public void revokeOrderByTwoArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	public void invokeOrderByTwoArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		String query = 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
 					  				  .orderBy("firstName", OrderBySortingType.ASC)
 					  				  .orderBy("lastName", OrderBySortingType.ASC)
@@ -130,14 +130,28 @@ public class CustomSqlSelectTest {
 	}
 	
 	@Test(expected = IncorrectArgumentException.class)
-	public void revokeOrderByOneNullArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	public void invokeOrderByOneNullArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
 					  .orderBy(null, OrderBySortingType.ASC)
 					  .getQuery();
 	}
 	
+	@Test(expected = IncorrectArgumentException.class)
+	public void invokeOrderByOneEmptyArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
+					  .orderBy("", OrderBySortingType.ASC)
+					  .getQuery();
+	}
+	
+	@Test(expected = IncorrectArgumentException.class)
+	public void invokeOrderByOneNullSortingType() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+		customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
+					  .orderBy("lastName", null)
+					  .getQuery();
+	}
+	
 	@Test(expected = StartSqlSentenceExeption.class)
-	public void revokeOrderByWithoutSelect() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
+	public void invokeOrderByWithoutSelect() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 	 	customSelector.orderBy("firstName", OrderBySortingType.ASC)
 					  .getQuery();
 	}

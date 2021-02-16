@@ -101,6 +101,11 @@ public class CustomSqlSelect extends CustomSql {
 		if(startQuery!= null && startQuery.toString().length() !=0 ) {
 			ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
 			String correctParamName = classInfo.getSelectParameter(field);
+			
+			if(sortingType == null) {
+				throw new IncorrectArgumentException(
+						"The sorting type is null. It should be OrderBySortingType.ASC or ...DESC");
+			}
 
 			if(!isOrderByPresent) {
 				startQuery.append(" ORDER BY ")
