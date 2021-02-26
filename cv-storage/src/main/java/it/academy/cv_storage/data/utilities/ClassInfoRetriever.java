@@ -1,6 +1,7 @@
 package it.academy.cv_storage.data.utilities;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Table;
 
+import it.academy.cv_storage.data.utilities.agregation.Aggregator;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -136,7 +138,8 @@ public class ClassInfoRetriever {
 		}else
 				throw new StartSqlSentenceExeption("You haven't insert class name to search from");
 	}
-	
+
+
 	
 	private Field findFieldIgnoreCase(Class<?> clazz, String fieldName) throws SecurityException, NoSuchFieldException {
 	    try {
@@ -151,6 +154,54 @@ public class ClassInfoRetriever {
 	        throw new NoSuchFieldException(fieldName);
 	    }
 	}
-	
-	
+
+	public String getSelectAggParameter(Aggregator aggSearchParam) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException {
+		String searchParam = aggSearchParam.getParamName();
+		Field[] fields = className.getDeclaredFields();
+
+		if(className != null) {
+
+
+			if (searchParam == null) {
+				throw new IncorrectArgumentException(
+						"The search parameter is null");
+			}
+
+			/*  If inputed by user parameter is in @annotation of field/column of class
+			 * it will return name of this annotation
+			 * else it return field name from class*/
+			if(Arrays.stream(fields)
+					.map(field->field.getAnnotation(Column.class))
+					.filter(colunm->colunm != null)
+					.anyMatch(column ->column.name().toLowerCase().trim()
+							.equals(searchParam.toLowerCase().trim()))) {
+				return aggSearchParam.getAggrFunc() + "(" + searchParam.toUpperCase() + ")";
+			} else if(Arrays.stream(fields)
+					.anyMatch(field->field.getName()
+							.toLowerCase().trim()
+							.equals(searchParam.toLowerCase().trim()))) {
+
+				//field  case sensitive otherwise
+				// it will be NullPointerExeption in Column colAnnot = field.getAnnotation(Column.class);
+				Field field = findFieldIgnoreCase(className, searchParam);
+				Column colAnnot = field.getAnnotation(Column.class);
+
+				if (colAnnot != null) {
+					return aggSearchParam.getAggrFunc() + "(" +  colAnnot.name().toUpperCase() + ")";
+				}else
+					return aggSearchParam.getAggrFunc() + "(" + field.getName().toUpperCase() + ")";
+			}else
+				throw new IncorrectArgumentException(
+						"There were inputed incorrect parameter for SQL query. Inserted parameter: <<<" + searchParam + ">>>");
+		}else
+			throw new StartSqlSentenceExeption("You haven't insert class name to search from");
+	}
+
+	public List<String> getSelectAggParameters(List<Aggregator> aggSearchParam) throws StartSqlSentenceExeption, NoSuchFieldException, IncorrectArgumentException {
+		List<String> result = new ArrayList<>();
+		for (Aggregator aggregator : aggSearchParam) {
+			result.add(getSelectAggParameter(aggregator));
+		}
+		return result;
+	}
 }

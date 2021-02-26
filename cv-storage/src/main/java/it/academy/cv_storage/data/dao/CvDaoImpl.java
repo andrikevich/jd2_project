@@ -1,4 +1,4 @@
-package it.academy.cv_storage.dao;
+package it.academy.cv_storage.data.dao;
 
 
 import java.util.List;
@@ -16,9 +16,16 @@ import it.academy.cv_storage.model.entity.Candidate;
 @Repository
 public class CvDaoImpl implements CvDao {
 	
-	@Autowired
+	
 	SessionFactory factory;
 	
+	
+	@Autowired
+	public CvDaoImpl(SessionFactory factory) {
+		this.factory = factory;
+	}
+
+
 	@Autowired
 	CustomSqlCondition sqlCreator;
 

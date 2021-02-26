@@ -2,7 +2,8 @@
 <databaseChangeLog
 	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+	http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
 
 	<changeSet id="1" author="dmitry_an">
@@ -113,38 +114,25 @@
 
 	<changeSet id="7" author="dmitry_an">
 		<sql>
-			CREATE TABLE IF NOT EXISTS `cv_storage`.`knowledge` (
+			CREATE TABLE IF NOT EXISTS  `cv_storage`.`knowledge` (
 			`KNOWLEDGE_ID` varchar(255) NOT NULL,
-			`CANDIDATE_ID` varchar(255)
-			DEFAULT NULL,
-			PRIMARY KEY (`KNOWLEDGE_ID`),
+			`KNOWLEDGE_NAME` varchar(255) NOT NULL,
+			`CANDIDATE_ID` varchar(255) DEFAULT NULL,
+			PRIMARY KEY (`KNOWLEDGE_ID`)
 
-			CONSTRAINT
-			`FK_KNOWLEDGE_CANDIDATE` FOREIGN KEY (`CANDIDATE_ID`) REFERENCES
-			`candidate` (`ID`)
-			ON DELETE NO ACTION
-			ON UPDATE CASCADE
-
-			) ENGINE=InnoDB
-			DEFAULT CHARSET=utf8;
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		</sql>
 	</changeSet>
 
 	<changeSet id="8" author="dmitry_an">
 		<sql>
-			CREATE TABLE IF NOT EXISTS `cv_storage`.`known_technologies` (
-			`Knowledge_KNOWLEDGE_ID` varchar(255) NOT NULL,
-			`KNOWN_TECHNOLOGIES`
-			varchar(255) DEFAULT NULL,
-
-			CONSTRAINT `FK_TECHNOLOG_KNOWLEDGE` FOREIGN
-			KEY (`Knowledge_KNOWLEDGE_ID`)
-			REFERENCES `knowledge` (`KNOWLEDGE_ID`)
-			ON DELETE NO ACTION
-			ON UPDATE CASCADE
-
-			) ENGINE=InnoDB DEFAULT
-			CHARSET=utf8;
+			CREATE TABLE  IF NOT EXISTS `cv_storage`.`candidate_knowledge` (
+			`KNOWLEDGE_ID` varchar(255) NOT NULL,
+			`CANDIDATE_ID` varchar(255) NOT NULL,
+			PRIMARY KEY (`CANDIDATE_ID`,`KNOWLEDGE_ID`),
+			CONSTRAINT `FK_CANDIDATE_KNOWLEDGE` FOREIGN KEY (`KNOWLEDGE_ID`) REFERENCES `knowledge` (`KNOWLEDGE_ID`),
+			CONSTRAINT `FK_KNOWLEDGE_CANDIDATE` FOREIGN KEY (`CANDIDATE_ID`) REFERENCES `candidate` (`ID`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		</sql>
 	</changeSet>
 
@@ -193,36 +181,39 @@
 		</sql>
 	</changeSet>
 
-	
+
 	<changeSet id="13" author="dmitry_an">
 	<sql>
-			INSERT IGNORE INTO `cv_storage`.`knowledge` (KNOWLEDGE_ID,
-			CANDIDATE_ID)
-			VALUES
-			('daeccd79-692b-11eb-8bfa-a08cfda726f3','3cbd2faf-691c-11eb-8bfa-a08cfda726f3'),
-			('e30c5a2e-692b-11eb-8bfa-a08cfda726f3','354b0bdb-691e-11eb-8bfa-a08cfda726f3'),
-			('eae362c7-692b-11eb-8bfa-a08cfda726f3','c0ad2f85-6920-11eb-8bfa-a08cfda726f3');
+		INSERT IGNORE INTO `cv_storage`.`knowledge` (KNOWLEDGE_ID, KNOWLEDGE_NAME)
+		VALUES
+		('daeccd79-692b-11eb-8bfa-a08cfda726f3','Git'),
+		('e30c5a2e-692b-11eb-8bfa-a08cfda726f3','Spring Boot'),
+		('eae362c7-692b-11eb-8bfa-a08cfda726f3','HTML'),
+		('39236a99-7746-11eb-9a09-a08cfda726f3','Java EE'),
+		('21d6ad01-7747-11eb-9a09-a08cfda726f3','Java Core'),
+		('32696068-7747-11eb-9a09-a08cfda726f3','Maven'),
+		('46850deb-7747-11eb-9a09-a08cfda726f3','REST'),
+		('5043b27d-7747-11eb-9a09-a08cfda726f3','Spring');
 		</sql>
 	</changeSet>
 
 	<changeSet id="14" author="dmitry_an">
 		<sql>
-			INSERT IGNORE INTO `cv_storage`.`KNOWN_TECHNOLOGIES`
-			(Knowledge_KNOWLEDGE_ID, KNOWN_TECHNOLOGIES)
+			INSERT IGNORE INTO `cv_storage`.`candidate_knowledge` (KNOWLEDGE_ID, CANDIDATE_ID)
 			VALUES
-			('daeccd79-692b-11eb-8bfa-a08cfda726f3','Git'),
-			('daeccd79-692b-11eb-8bfa-a08cfda726f3','Spring Boot'),
-			('daeccd79-692b-11eb-8bfa-a08cfda726f3','HTML'),
-			('e30c5a2e-692b-11eb-8bfa-a08cfda726f3','Git'),
-			('e30c5a2e-692b-11eb-8bfa-a08cfda726f3','Java EE'),
-			('e30c5a2e-692b-11eb-8bfa-a08cfda726f3','Java Core'),
-			('eae362c7-692b-11eb-8bfa-a08cfda726f3','Maven'),
-			('eae362c7-692b-11eb-8bfa-a08cfda726f3','REST'),
-			('eae362c7-692b-11eb-8bfa-a08cfda726f3','Spring');
+			('daeccd79-692b-11eb-8bfa-a08cfda726f3','3cbd2faf-691c-11eb-8bfa-a08cfda726f3'),
+			('e30c5a2e-692b-11eb-8bfa-a08cfda726f3','3cbd2faf-691c-11eb-8bfa-a08cfda726f3'),
+			('eae362c7-692b-11eb-8bfa-a08cfda726f3','3cbd2faf-691c-11eb-8bfa-a08cfda726f3'),
+			('daeccd79-692b-11eb-8bfa-a08cfda726f3','354b0bdb-691e-11eb-8bfa-a08cfda726f3'),
+			('39236a99-7746-11eb-9a09-a08cfda726f3','354b0bdb-691e-11eb-8bfa-a08cfda726f3'),
+			('21d6ad01-7747-11eb-9a09-a08cfda726f3','354b0bdb-691e-11eb-8bfa-a08cfda726f3'),
+			('32696068-7747-11eb-9a09-a08cfda726f3','c0ad2f85-6920-11eb-8bfa-a08cfda726f3'),
+			('46850deb-7747-11eb-9a09-a08cfda726f3','c0ad2f85-6920-11eb-8bfa-a08cfda726f3'),
+			('5043b27d-7747-11eb-9a09-a08cfda726f3','c0ad2f85-6920-11eb-8bfa-a08cfda726f3');
 		</sql>
 	</changeSet>
-	
-	
+
+
 	<changeSet id="15" author="dmitry_an">
 		<sql>
 			INSERT IGNORE INTO `cv_storage`.`skype` (skype_ID,SKYPE_USER_NAME,

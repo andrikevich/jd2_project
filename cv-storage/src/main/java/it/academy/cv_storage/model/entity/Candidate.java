@@ -5,15 +5,7 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -27,7 +19,6 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @Entity
-@ToString
 @Table (name = "candidate")
 public class Candidate implements Serializable {
 
@@ -57,26 +48,29 @@ public class Candidate implements Serializable {
 
 	@OneToMany(mappedBy = "candidate", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
-	private Set<Phone> phone;
+	private Set<Phone> phones;
 
 	@OneToMany(mappedBy = "candidate", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
-	private Set<Site> site;
+	private Set<Site> sites;
 
 	@OneToMany(mappedBy = "candidate", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
-	private Set<Email> email;
+	private Set<Email> emails;
 
 	@OneToMany(mappedBy = "candidate", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
 			CascadeType.REFRESH })
-	private Set<Skype> skype;
+	private Set<Skype> skypes;
 
-	@OneToMany(mappedBy = "candidate", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH })
-	private Set<Knowledge> knowledge;
+	@ManyToMany (cascade = {CascadeType.DETACH,CascadeType.MERGE,
+			CascadeType.PERSIST,CascadeType.REFRESH})
+	@JoinTable(
+			name = "candidate_knowledge",
+			joinColumns = @JoinColumn(name = "CANDIDATE_ID"	),
+			inverseJoinColumns = @JoinColumn(name = "KNOWLEDGE_ID"))
+	private Set<Knowledge> knowledges;
 
 	public Candidate(String firstName, String middleName, String lastName, Date birthDate, Gender gender) {
-		super();
 		this.firstName = firstName;
 		this.middleName = middleName;
 		this.lastName = lastName;
@@ -85,45 +79,58 @@ public class Candidate implements Serializable {
 	}
 
 	public void addPhone(Phone thePhone) {
-		if (phone == null) {
-			phone = new HashSet<Phone>();
+		if (phones == null) {
+			phones = new HashSet<Phone>();
 		}
-		phone.add(thePhone);
+		phones.add(thePhone);
 		thePhone.setCandidate(this);
 	}
 	
 	public void addSite(Site theSite) {
-		if (site == null) {
-			site = new HashSet<Site>();
+		if (sites == null) {
+			sites = new HashSet<Site>();
 		}
-		site.add(theSite);
+		sites.add(theSite);
 		theSite.setCandidate(this);
 	}
 	
 	public void addEmail(Email theEmail) {
-		if (email == null) {
-			email = new HashSet<Email>();
+		if (emails == null) {
+			emails = new HashSet<Email>();
 		}
-		email.add(theEmail);
+		emails.add(theEmail);
 		theEmail.setCandidate(this);
 	}
 	
 	public void addSkype(Skype theSkype) {
-		if (skype == null) {
-			skype = new HashSet<Skype>();
+		if (skypes == null) {
+			skypes = new HashSet<Skype>();
 		}
-		skype.add(theSkype);
+		skypes.add(theSkype);
 		theSkype.setCandidate(this);
 	}
 	public void addKnowledge(Knowledge theKnowledge) {
-		if (knowledge == null) {
-			knowledge = new HashSet<Knowledge>();
+		if (knowledges == null) {
+			knowledges = new HashSet<Knowledge>();
 		}
-		knowledge.add(theKnowledge);
-		theKnowledge.setCandidate(this);
+		knowledges.add(theKnowledge);
+		//theKnowledge.setCandidate(this);
 	}
 
 
-	
-	
+	@Override
+	public String toString() {
+		return "Candidate{" +
+				"firstName='" + firstName + '\'' +
+				", middleName='" + middleName + '\'' +
+				", lastName='" + lastName + '\'' +
+				", birthDate=" + birthDate +
+				", gender=" + gender +
+				", phones=" + phones +
+				", sites=" + sites +
+				", emails=" + emails +
+				", skypes=" + skypes +
+				", knowledges=" + knowledges +
+				'}';
+	}
 }

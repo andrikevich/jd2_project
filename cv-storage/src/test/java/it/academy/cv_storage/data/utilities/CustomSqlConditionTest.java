@@ -111,7 +111,7 @@ public class CustomSqlConditionTest {
 									  .where()
 									  .equal("firstName", "")
 									  .getQuery();
-		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate  WHERE FIRST_NAME=''".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  WHERE FIRST_NAME=''".trim(), query.trim());
 	}
 	
 	@Test(expected = IncorrectArgumentException.class)

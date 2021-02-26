@@ -1,11 +1,13 @@
 package it.academy.cv_storage.app;
 
 
+import java.util.List;
 import java.util.logging.Logger;
 
+import it.academy.cv_storage.data.utilities.agregation.MaxAggregator;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import it.academy.cv_storage.dao.CvDaoImpl;
+import it.academy.cv_storage.data.dao.CvDaoImpl;
 import it.academy.cv_storage.data.utilities.CustomSqlSelect;
 import it.academy.cv_storage.data.utilities.OrderBySortingType;
 import it.academy.cv_storage.exception.ClassHasNoCorrectAnnotation;
@@ -54,9 +56,27 @@ public class TestMeCustomSQl {
 										.orderBy("firstName", OrderBySortingType.ASC)
 										.getQuery();
 			System.out.println(query3);
+
+			// ----------------4----------------------
+			CustomSqlSelect customSql4 = new CustomSqlSelect();
+			String query4 = customSql4.selectWithAggregationFrom(Candidate.class,
+											List.of( new MaxAggregator("firstName")),
+											"firstName","middle_name")
+										.where()
+										.equal("firstName", "John")
+										.or()
+										.gt("lastName", "Brown")
+					                    .groupBy("firstName")
+										.having()
+												.equal(new MaxAggregator("middleName"),"yyyyyy")
+												.and()
+												.gt("birthDate","1970-02-03" )
+										.orderBy("firstName", OrderBySortingType.ASC)
+										.getQuery();
+			System.out.println(query4);
 			
 			
-				System.out.println(dao.getAllCandidateBySql(query1));
+
 			
 			
 			

@@ -14,11 +14,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CustomSqlCondition extends CustomSqlSelect {
 
-	private boolean conditionStarted = false;
+	protected boolean conditionStarted = false;
 
 	public CustomSqlCondition(StringBuilder startQuery) {
 		this.startQuery = startQuery;
 	}
+
+
+
+
 	// ------------- conditions ------------------
 
 	// EQUAL String "parameter" = String "value"

@@ -39,18 +39,20 @@ public class Starter {
 //			Site site = new Site("www.youtube.com");
 //			Email email = new Email("ilon.musk@tut.by");
 //			Skype skype = new Skype("i.musk");
-//			Knowledge knowledge = new Knowledge(Set.of("java", "Maven", "Spring"));
+//			Knowledge knowledge = new Knowledge("Hibernate");
 //			candidate.addPhone(phone);
 //			candidate.addSite(site);
 //			candidate.addEmail(email);
 //			candidate.addSkype(skype);
 //			candidate.addKnowledge(knowledge);
 //			session.persist(candidate);
-//			
+
 			Query createQuery = session.createSQLQuery("select * from candidate where FIRST_NAME='Мария'").addEntity(Candidate.class);
 			createQuery.list();
-			//Candidate candidate = session.get(Candidate.class, "354b0bdb-691e-11eb-8bfa-a08cfda726f3");
-		
+
+
+//			Candidate candidate = session.get(Candidate.class, "354b0bdb-691e-11eb-8bfa-a08cfda726f3");
+//
 			System.out.println(createQuery.list());
 //			
 			session.getTransaction().commit();

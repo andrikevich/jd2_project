@@ -56,7 +56,7 @@ public class CustomSqlSelectTest {
 	@Test
 	public void selectFromWithOneCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		String query = customSelector.selectFrom(Candidate.class,"first_name").getQuery();
-		assertEquals("SELECT  FIRST_NAME from candidate".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME from candidate".trim(), query.trim());
 	
 	}
 	
@@ -73,13 +73,13 @@ public class CustomSqlSelectTest {
 	@Test
 	public void selectFromWithTwoCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		String query = customSelector.selectFrom(Candidate.class,"first_name","lastName").getQuery();
-		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
 	
 	}
 	@Test
 	public void selectFromWithTwoCorrectParameterWithoutCase() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		String query = customSelector.selectFrom(Candidate.class,"fIRst_name","lastname").getQuery();
-		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
 	}
 	
 	@Test(expected = IncorrectArgumentException.class)
@@ -117,7 +117,7 @@ public class CustomSqlSelectTest {
 		String query = 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
 					  				  .orderBy("firstName", OrderBySortingType.ASC)
 					  				  .getQuery();
-		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC".trim(), query.trim());
 	}
 	
 	@Test
@@ -126,7 +126,7 @@ public class CustomSqlSelectTest {
 					  				  .orderBy("firstName", OrderBySortingType.ASC)
 					  				  .orderBy("lastName", OrderBySortingType.ASC)
 					  				  .getQuery();
-		assertEquals("SELECT  FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC , LAST_NAME ASC".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC , LAST_NAME ASC".trim(), query.trim());
 	}
 	
 	@Test(expected = IncorrectArgumentException.class)

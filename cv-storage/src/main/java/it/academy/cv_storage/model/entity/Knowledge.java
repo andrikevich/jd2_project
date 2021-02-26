@@ -1,17 +1,10 @@
 package it.academy.cv_storage.model.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import org.hibernate.annotations.GenericGenerator;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,26 +24,59 @@ public class Knowledge implements Serializable{
 	@GeneratedValue(generator = "gen")
 	@Column(name="KNOWLEDGE_ID")
 	private String knowledgeId;
-	
-	@ElementCollection
-	@Column(name="KNOWN_TECHNOLOGIES")
-	@CollectionTable(name="KNOWN_TECHNOLOGIES")
-	private Set<String> knownTechnologies;
-	
-	@ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,
-			  CascadeType.PERSIST,CascadeType.REFRESH})
-	@JoinColumn(name="CANDIDATE_ID")
-	private Candidate candidate;
 
-	public Knowledge(Set<String> knownTechnologies) {
-		this.knownTechnologies = knownTechnologies;
+	@Column(name="KNOWLEDGE_NAME")
+	private String knowledgeName;
+
+	
+	@ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,
+			  CascadeType.PERSIST,CascadeType.REFRESH})
+	@JoinTable(
+			name = "candidate_knowledge",
+			joinColumns = @JoinColumn(name = "KNOWLEDGE_ID"	),
+			inverseJoinColumns = @JoinColumn(name = "CANDIDATE_ID"))
+	private Set<Candidate> candidates;
+
+	public void addCandidate(Candidate theCandidate) {
+		if (candidates == null) {
+			candidates = new HashSet<Candidate>();
+		}
+		candidates.add(theCandidate);
+	}
+
+	public String getKnowledgeId() {
+		return knowledgeId;
+	}
+
+	public void setKnowledgeId(String knowledgeId) {
+		this.knowledgeId = knowledgeId;
+	}
+
+	public Set<Candidate> getCandidates() {
+		return candidates;
+	}
+
+	public void setCandidates(Set<Candidate> candidates) {
+		this.candidates = candidates;
+	}
+
+	public String getKnowledgeName() {
+		return knowledgeName;
+	}
+
+	public void setKnowledgeName(String knowledgeName) {
+		this.knowledgeName = knowledgeName;
+	}
+
+
+	public Knowledge(String knowledgeName) {
+		this.knowledgeName = knowledgeName;
 	}
 
 	@Override
 	public String toString() {
-		return "knownTechnologies=" + knownTechnologies ;
+		return "Knowledge{" +
+				"knowledgeName='" + knowledgeName + '\'' +
+				'}';
 	}
-	
-
-
 }
