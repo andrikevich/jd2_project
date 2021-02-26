@@ -86,12 +86,12 @@ public class CustomSqlAggCondition extends CustomSqlCondition{
 
     @Override
     public CustomSqlAggCondition equal(String paramName, String value) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption {
-        return this.equal(paramName, value);
+        return (CustomSqlAggCondition)super.equal(paramName, value);
     }
 
     @Override
     public CustomSqlAggCondition notEqual(String paramName, String value) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption {
-        return this.notEqual(paramName, value);
+        return (CustomSqlAggCondition)super.notEqual(paramName, value);
     }
 
     @Override
@@ -101,31 +101,31 @@ public class CustomSqlAggCondition extends CustomSqlCondition{
 
     @Override
     public CustomSqlAggCondition le(String paramName, String value) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption {
-        return this.le(paramName, value);
+        return (CustomSqlAggCondition)super.le(paramName, value);
     }
 
     @Override
     public CustomSqlAggCondition gt(String paramName, String value) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption {
-        return this.gt(paramName, value);
+        return (CustomSqlAggCondition)super.gt(paramName, value);
     }
 
     @Override
     public CustomSqlAggCondition ge(String paramName, String value) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption {
-        return this.ge(paramName, value);
+        return (CustomSqlAggCondition)super.ge(paramName, value);
     }
 
     @Override
     public CustomSqlAggCondition like(String paramName, String wildcard) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption {
-        return this.like(paramName, wildcard);
+        return (CustomSqlAggCondition)super.like(paramName, wildcard);
     }
 
     @Override
     public CustomSqlAggCondition or() throws StartSqlSentenceExeption {
-        return this.or();
+        return (CustomSqlAggCondition)super.or();
     }
 
     @Override
     public CustomSqlAggCondition and() throws StartSqlSentenceExeption {
-        return this.and();
+        return (CustomSqlAggCondition)super.and();
     }
 }
