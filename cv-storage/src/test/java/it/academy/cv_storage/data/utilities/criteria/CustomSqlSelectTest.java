@@ -1,6 +1,9 @@
-package it.academy.cv_storage.data.utilities;
+package it.academy.cv_storage.data.utilities.criteria;
 
 import static org.junit.Assert.assertEquals;
+
+import it.academy.cv_storage.data.utilities.criteria.CustomSqlSelect;
+import it.academy.cv_storage.data.utilities.helper.OrderBySortingType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,7 @@ public class CustomSqlSelectTest {
 
 	@Autowired
 	@Qualifier("customSqlSelect")
-	CustomSqlSelect customSelector;
+    CustomSqlSelect customSelector;
 	
 	// -------------  selectAllFrom -----------------
 	
@@ -132,7 +135,7 @@ public class CustomSqlSelectTest {
 	@Test(expected = IncorrectArgumentException.class)
 	public void invokeOrderByOneNullArg() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
-					  .orderBy(null, OrderBySortingType.ASC)
+					  .orderBy((String) null, OrderBySortingType.ASC)
 					  .getQuery();
 	}
 	

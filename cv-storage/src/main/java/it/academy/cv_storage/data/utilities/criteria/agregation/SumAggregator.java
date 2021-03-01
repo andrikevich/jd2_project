@@ -1,4 +1,4 @@
-package it.academy.cv_storage.data.utilities.agregation;
+package it.academy.cv_storage.data.utilities.criteria.agregation;
 
 import it.academy.cv_storage.exception.IncorrectArgumentException;
 

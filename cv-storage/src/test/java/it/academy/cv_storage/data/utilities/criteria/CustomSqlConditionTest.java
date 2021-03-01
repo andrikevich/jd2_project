@@ -1,7 +1,9 @@
-package it.academy.cv_storage.data.utilities;
+package it.academy.cv_storage.data.utilities.criteria;
 
 import static org.junit.Assert.*;
 
+import it.academy.cv_storage.data.utilities.criteria.CustomSqlCondition;
+import it.academy.cv_storage.data.utilities.helper.OrderBySortingType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,16 @@ public class CustomSqlConditionTest {
 	@Autowired
 	@Qualifier("customSqlCondition")
 	CustomSqlCondition customSelector;
+
+
+	@Test
+	public void selectFromWithTwoCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption {
+		String query = customSelector.selectFrom(Candidate.class,"first_name","lastName").getQuery();
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+
+	}
+
+
 	
 	//------------------ <positive-tests> ---------------------------
 

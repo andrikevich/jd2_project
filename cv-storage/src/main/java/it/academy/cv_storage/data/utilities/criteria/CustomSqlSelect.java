@@ -1,35 +1,46 @@
-package it.academy.cv_storage.data.utilities;
+package it.academy.cv_storage.data.utilities.criteria;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import it.academy.cv_storage.data.utilities.agregation.Aggregator;
+import it.academy.cv_storage.data.utilities.helper.ClassInfoRetriever;
+import it.academy.cv_storage.data.utilities.helper.OrderBySortingType;
+import it.academy.cv_storage.data.utilities.criteria.agregation.Aggregator;
+import it.academy.cv_storage.exception.*;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import it.academy.cv_storage.exception.ClassHasNoCorrectAnnotation;
-import it.academy.cv_storage.exception.IncorrectArgumentException;
-import it.academy.cv_storage.exception.NullClassEntityExeption;
-import it.academy.cv_storage.exception.StartSqlSentenceExeption;
 
 @Component
 @Scope("prototype")
 public class CustomSqlSelect extends CustomSql {
-
-	private boolean isWherePresent = false;
-	private boolean isHavingPresent = false;
+	protected boolean isSelectPresent = false;
+	protected boolean isWherePresent = false;
+	protected boolean isHavingPresent = false;
 	private boolean isOrderByPresent = false;
 	private boolean isGroupByPresent = false;
 	private boolean isAggregateFuncPresent = false;
 
-	private StringBuilder orderByStr = new StringBuilder();
-	
+
+	protected  List<String> paramOfQuery = new ArrayList<>();
+
+	public List<String> getParamOfQuery() {
+		return paramOfQuery;
+	}
+
+
 	//SELECT * from tableWithClassName
 	public <T> CustomSqlSelect selectAllFrom(Class<T> clsFrom) throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NullClassEntityExeption {
+		if(isSelectPresent){
+			throw new StartSqlSentenceExeption(
+					"Second usage SELECT is not permit. If you tried subquery create a new instance of customSQL");
+		}
+
 		ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
 		this.clsFrom = clsFrom;
 		if(startQuery == null) {
+		isSelectPresent = true;
 		startQuery = new StringBuilder();
 		startQuery.append("SELECT * from").append(" ")
 				.append(classInfo.getEntityTableName())
@@ -44,6 +55,11 @@ public class CustomSqlSelect extends CustomSql {
 	//SELECT searchParam1, searchParam2 ... from tableWithClassName
 	public <T> CustomSqlSelect selectFrom(Class<T> clsFrom, String...searchParam) 
 					throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NoSuchFieldException, SecurityException, IncorrectArgumentException, NullClassEntityExeption {
+		if(isSelectPresent){
+			throw new StartSqlSentenceExeption(
+					"Second usage SELECT is not permit. If you tried subquery create a new instance of customSQL");
+		}
+
 		if(searchParam == null) {
 			throw new IncorrectArgumentException("It was inserted null instead of array of parameters");
 		}
@@ -51,8 +67,9 @@ public class CustomSqlSelect extends CustomSql {
 		this.clsFrom = clsFrom;
 		
 		if(startQuery == null) {
-		startQuery = new StringBuilder();
-		startQuery.append("SELECT ");
+			isSelectPresent = true;
+			startQuery = new StringBuilder();
+			startQuery.append("SELECT ");
 			if(searchParam.length == 0) {
 				startQuery.append("* ");
 			}else {
@@ -73,7 +90,13 @@ public class CustomSqlSelect extends CustomSql {
 	}
 
 	//SELECT AggFunc(searchParam1) searchParam1, searchParam2 ... from tableWithClassName
-	public <T> CustomSqlSelect selectWithAggregationFrom(Class<T> clsFrom, List<Aggregator> aggregators, String...searchParam) throws StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption, NoSuchFieldException {
+	public <T> CustomSqlSelect selectWithAggregationFrom(
+			Class<T> clsFrom, List<Aggregator> aggregators, String...searchParam) throws StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption, NoSuchFieldException {
+		if(isSelectPresent){
+			throw new StartSqlSentenceExeption(
+					"Second usage SELECT is not permit. If you tried subquery create a new instance of customSQL");
+		}
+
 		if(searchParam == null) {
 			throw new IncorrectArgumentException("It was inserted null instead of array of parameters");
 		}
@@ -87,19 +110,23 @@ public class CustomSqlSelect extends CustomSql {
 		this.clsFrom = clsFrom;
 
 		if(startQuery == null) {
+			isSelectPresent = true;
 			startQuery = new StringBuilder();
 			startQuery.append("SELECT ");
+
+			isAggregateFuncPresent = true;
+			//retrieve List of prepared agg func e.g.  MAX(FIRST_NAME)
+			List<String> checkedAggSearchParam = classInfo.getSelectAggParameters(aggregators);
+			startQuery.append(checkedAggSearchParam.stream()
+					.map(x->x.toUpperCase())
+					.collect(Collectors.joining(", ","","")));
+
+			// add regular (non aggregate) filds to select sentence
 			if(searchParam.length == 0) {
 				//if searchParam haven't been inputted it would be only agg parameters
 				startQuery.append(" ");
 			}else {
-				isAggregateFuncPresent = true;
-				//retrieve List of prepared agg func e.g.  MAX(FIRST_NAME)
-				List<String> checkedAggSearchParam = classInfo.getSelectAggParameters(aggregators);
 				List<String> checkedSearchParam = classInfo.getSelectParameters(searchParam);
-				startQuery.append(checkedAggSearchParam.stream()
-						.map(x->x.toUpperCase())
-						.collect(Collectors.joining(", ","","")));
 				startQuery.append(",");
 				startQuery.append(checkedSearchParam.stream()
 						.map(x->x.toUpperCase())
@@ -116,6 +143,20 @@ public class CustomSqlSelect extends CustomSql {
 
 	}
 
+	public <T> CustomSqlSelect selectWithAggregationFrom(Class<T> clsFrom, Aggregator aggregator, String...searchParam)
+			throws NoSuchFieldException, IncorrectArgumentException, NullClassEntityExeption, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation {
+		if(aggregator == null)
+			throw new IncorrectArgumentException("It was inserted null instead of Aggregation");
+		return selectWithAggregationFrom(clsFrom,List.of(aggregator),searchParam);
+	}
+
+	public <T> CustomSqlSelect selectWithAggregationFrom(Class<T> clsFrom, Aggregator aggregator)
+			throws NoSuchFieldException, IncorrectArgumentException, NullClassEntityExeption, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation {
+		if(aggregator == null)
+			throw new IncorrectArgumentException("It was inserted null instead of Aggregation");
+		return selectWithAggregationFrom(clsFrom,List.of(aggregator),new String[0]);
+	}
+
 	@Override
 	public String getQuery() throws StartSqlSentenceExeption {
 		if(startQuery!= null && startQuery.toString().length() !=0 ) {
@@ -128,7 +169,7 @@ public class CustomSqlSelect extends CustomSql {
 
 	// ------------------ WHERE --------------------------------------
 	
-	public CustomSqlCondition where() throws StartSqlSentenceExeption {
+	public CustomSqlCondition where() throws StartSqlSentenceExeption{
 		if(startQuery == null) {
 			throw new StartSqlSentenceExeption(
 				"The beginning of SQL query is incorrect. You should use selectAllFrom() or selectFrom() or selectWithAggregationFrom() first");
@@ -150,12 +191,19 @@ public class CustomSqlSelect extends CustomSql {
 				"WHERE can't be applied after ORDER BY. You should use first WHERE and then ORDER BY");
 		}
 
-
+		// to exclude double using WHERE
+		if(isWherePresent){
+			throw new StartSqlSentenceExeption(
+					"Double using WHERE is not permitted");
+		}
 
 			startQuery.append(" WHERE ");
 			isWherePresent = true;
 			CustomSqlCondition customSqlCondition = new CustomSqlCondition(startQuery);
 			customSqlCondition.clsFrom = this.clsFrom;
+			customSqlCondition.isWherePresent = isWherePresent;
+			customSqlCondition.isSelectPresent = isSelectPresent;
+			customSqlCondition.paramOfQuery=this.paramOfQuery;
 		return customSqlCondition;
 	}
 	
@@ -193,6 +241,44 @@ public class CustomSqlSelect extends CustomSql {
 					"The beginning of SQL query is incorrect. You should use selectAllFrom() or selectFrom() or selectWithAggregationFrom() first");
 
 		}
+
+	public CustomSqlSelect orderBy(Aggregator aggPar, OrderBySortingType sortingType) throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NullClassEntityExeption, NoSuchFieldException, SecurityException, IncorrectArgumentException {
+
+		if(startQuery!= null && startQuery.toString().length() !=0 ) {
+			ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
+			String correctParamName = classInfo.getSelectParameter(aggPar.getParamName());
+
+			if(sortingType == null) {
+				throw new IncorrectArgumentException(
+						"The sorting type is null. It should be OrderBySortingType.ASC or ...DESC");
+			}
+
+			if(!isOrderByPresent) {
+				startQuery.append(" ORDER BY ")
+						.append(aggPar.getAggrFunc())
+						.append("(")
+						.append(correctParamName)
+						.append(") ")
+						.append(sortingType.toString())
+						.append(" ");
+				//flag to create ORDER BY from two or more argument of sorting
+				isOrderByPresent =true;
+			} else {
+				startQuery.append(", ")
+						.append(aggPar.getAggrFunc())
+						.append("(")
+						.append(correctParamName)
+						.append(") ")
+						.append(sortingType.toString())
+						.append(" ");
+			}
+
+			return this;
+		}else
+			throw new StartSqlSentenceExeption(
+					"The beginning of SQL query is incorrect. You should use selectAllFrom() or selectFrom() or selectWithAggregationFrom() first");
+
+	}
 
 	// ------------------ GROUP BY --------------------------------------
 
@@ -235,7 +321,7 @@ public class CustomSqlSelect extends CustomSql {
 
 
 // ------------------ HAVING --------------------------------------
-public CustomSqlAggCondition having() throws StartSqlSentenceExeption {
+public CustomSqlAggCondition having() throws StartSqlSentenceExeption, FinishSqlSentenceExeption {
 	if(startQuery == null) {
 		throw new StartSqlSentenceExeption(
 				"The beginning of SQL query is incorrect. You should use selectAllFrom() or selectFrom() or selectWithAggregationFrom() first");
@@ -245,13 +331,20 @@ public CustomSqlAggCondition having() throws StartSqlSentenceExeption {
 		throw new StartSqlSentenceExeption(
 				"HAVING can't be applied after ORDER BY. You should use first HAVING and then ORDER BY");
 	}
+// to exclude double using HAVING
+	if(isHavingPresent){
+		throw new FinishSqlSentenceExeption(
+				"Double using HAVING is not permitted");
+	}
 
-
-
-	startQuery.append(" HAVING ");
 	isHavingPresent = true;
+	startQuery.append(" HAVING ");
 	CustomSqlAggCondition customSqlAggCondition = new CustomSqlAggCondition(startQuery);
+	customSqlAggCondition.conditionWhereStarted = false;
+	customSqlAggCondition.isHavingPresent=isHavingPresent;
+	customSqlAggCondition.isSelectPresent=isSelectPresent;
 	customSqlAggCondition.clsFrom = this.clsFrom;
+	customSqlAggCondition.paramOfQuery=this.paramOfQuery;
 	return customSqlAggCondition;
 }
 }

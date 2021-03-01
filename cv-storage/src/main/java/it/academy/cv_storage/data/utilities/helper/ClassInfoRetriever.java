@@ -1,4 +1,4 @@
-package it.academy.cv_storage.data.utilities;
+package it.academy.cv_storage.data.utilities.helper;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -9,15 +9,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Table;
 
-import it.academy.cv_storage.data.utilities.agregation.Aggregator;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import it.academy.cv_storage.data.utilities.criteria.agregation.Aggregator;
 
 import it.academy.cv_storage.exception.ClassHasNoCorrectAnnotation;
 import it.academy.cv_storage.exception.IncorrectArgumentException;
 import it.academy.cv_storage.exception.NullClassEntityExeption;
 import it.academy.cv_storage.exception.StartSqlSentenceExeption;
-import it.academy.cv_storage.model.entity.Candidate;
 
 
 public class ClassInfoRetriever {

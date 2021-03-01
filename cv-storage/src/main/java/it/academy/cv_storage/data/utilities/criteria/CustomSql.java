@@ -1,4 +1,4 @@
-package it.academy.cv_storage.data.utilities;
+package it.academy.cv_storage.data.utilities.criteria;
 
 import it.academy.cv_storage.exception.StartSqlSentenceExeption;
 

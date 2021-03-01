@@ -4,16 +4,13 @@ package it.academy.cv_storage.app;
 import java.util.List;
 import java.util.logging.Logger;
 
-import it.academy.cv_storage.data.utilities.agregation.MaxAggregator;
+import it.academy.cv_storage.data.utilities.criteria.agregation.MaxAggregator;
+import it.academy.cv_storage.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import it.academy.cv_storage.data.dao.CvDaoImpl;
-import it.academy.cv_storage.data.utilities.CustomSqlSelect;
-import it.academy.cv_storage.data.utilities.OrderBySortingType;
-import it.academy.cv_storage.exception.ClassHasNoCorrectAnnotation;
-import it.academy.cv_storage.exception.IncorrectArgumentException;
-import it.academy.cv_storage.exception.NullClassEntityExeption;
-import it.academy.cv_storage.exception.StartSqlSentenceExeption;
+import it.academy.cv_storage.data.utilities.criteria.CustomSqlSelect;
+import it.academy.cv_storage.data.utilities.helper.OrderBySortingType;
 import it.academy.cv_storage.model.entity.Candidate;
 
 public class TestMeCustomSQl {
@@ -37,7 +34,7 @@ public class TestMeCustomSQl {
 										.equal("lastName", "Морская")
 										.getQuery();
 			System.out.println(query1);
-//			
+//
 //			// ----------------2----------------------
 			CustomSqlSelect customSql2 = new CustomSqlSelect();
 			String query2 = customSql2.selectFrom
@@ -45,7 +42,7 @@ public class TestMeCustomSQl {
 					.orderBy("firstName", OrderBySortingType.ASC)
 					.getQuery();
 			System.out.println(query2);
-//			
+//
 			// ----------------3----------------------
 			CustomSqlSelect customSql3 = new CustomSqlSelect();
 			String query3 = customSql3.selectFrom(Candidate.class,"firstName","middle_name")
@@ -74,13 +71,13 @@ public class TestMeCustomSQl {
 										.orderBy("firstName", OrderBySortingType.ASC)
 										.getQuery();
 			System.out.println(query4);
-			
-			
 
+
+			System.out.println(customSql4.getParamOfQuery());
 			
 			
 			
-		} catch (StartSqlSentenceExeption | ClassHasNoCorrectAnnotation | NoSuchFieldException | SecurityException | IncorrectArgumentException | NullClassEntityExeption e) {
+		} catch (StartSqlSentenceExeption | ClassHasNoCorrectAnnotation | NoSuchFieldException | SecurityException | IncorrectArgumentException | NullClassEntityExeption | FinishSqlSentenceExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -88,3 +85,4 @@ public class TestMeCustomSQl {
 	
 
 }
+
