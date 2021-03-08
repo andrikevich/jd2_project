@@ -9,6 +9,7 @@ import it.academy.cv_storage.exception.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import it.academy.cv_storage.config.AppConfig;
@@ -27,6 +28,7 @@ public class CvServiceTest {
 	Logger logger = Logger.getLogger(getClass().getName());
 	
 	@Autowired
+	@Qualifier("customSqlCondition")
 	CustomSqlCondition sqlCreator;
 	
 	@Test
@@ -59,6 +61,7 @@ public class CvServiceTest {
 		logger.info(">>> SQL Query: " + sqlQuery);
 		List<Candidate> candidates = service.getCandidateBySql(sqlQuery);
 		logger.info(">>> Result of Query: " + candidates);
+		logger.info("\n>>>> Search parameters: " + sqlCreator.getParamOfQuery());
 		assertNotNull(candidates);
 		assertEquals(3,candidates.size());
 	}

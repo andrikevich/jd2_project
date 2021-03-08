@@ -179,7 +179,7 @@ public class CustomSqlAggConditionTest {
                 .where()
                 .equal("firstName", "John")
                 .getQuery();
-        assertEquals("SELECT * from candidate  WHERE FIRST_NAME='John'".trim(), query.trim());
+        assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John'".trim(), query.trim());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class CustomSqlAggConditionTest {
                 .and()
                 .gt("birthDate", "1980-02-02")
                 .getQuery();
-        assertEquals("SELECT * from candidate  WHERE FIRST_NAME='John'  AND BIRTH_DATE>'1980-02-02'".trim(), query.trim());
+        assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02'".trim(), query.trim());
     }
 
     @Test
@@ -203,7 +203,7 @@ public class CustomSqlAggConditionTest {
                 .or()
                 .notEqual("gender", Gender.МУЖЧИНА.toString())
                 .getQuery();
-        assertEquals("SELECT * from candidate  WHERE FIRST_NAME='John'  AND BIRTH_DATE>'1980-02-02'  OR GENDER<>'МУЖЧИНА'".trim(), query.trim());
+        assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02' OR  GENDER<>'МУЖЧИНА'".trim(), query.trim());
     }
 
     @Test
@@ -213,7 +213,7 @@ public class CustomSqlAggConditionTest {
                 .equal("firstName", "John")
                 .orderBy("firstName", OrderBySortingType.DESC)
                 .getQuery();
-        assertEquals("SELECT * from candidate  WHERE FIRST_NAME='John'  ORDER BY FIRST_NAME DESC".trim(), query.trim());
+        assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' ORDER BY FIRST_NAME DESC".trim(), query.trim());
     }
 
     //------------------ </positive-tests> ---------------------------
@@ -251,7 +251,7 @@ public class CustomSqlAggConditionTest {
                 .where()
                 .equal("firstName", "")
                 .getQuery();
-        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  WHERE FIRST_NAME=''".trim(), query.trim());
+        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  WHERE  FIRST_NAME=''".trim(), query.trim());
     }
 
     @Test(expected = IncorrectArgumentException.class)
@@ -394,7 +394,7 @@ public class CustomSqlAggConditionTest {
                 .having()
                 .gt("birthDate","1970-08-05")
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE)  from candidate  GROUP BY LAST_NAME  HAVING BIRTH_DATE>'1970-08-05'".trim(),
+        assertEquals("SELECT AVG(BIRTH_DATE)  from candidate  GROUP BY LAST_NAME  HAVING  BIRTH_DATE>'1970-08-05'".trim(),
                     query.trim());
 
     }
@@ -409,7 +409,7 @@ public class CustomSqlAggConditionTest {
                 .and()
                 .lt("birthDate","1999-08-05")
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE)  from candidate  GROUP BY LAST_NAME  HAVING BIRTH_DATE>'1970-08-05'  AND BIRTH_DATE<'1999-08-05'".trim(),
+        assertEquals("SELECT AVG(BIRTH_DATE)  from candidate  GROUP BY LAST_NAME  HAVING  BIRTH_DATE>'1970-08-05' AND  BIRTH_DATE<'1999-08-05'".trim(),
                 query.trim());
 
     }
@@ -426,7 +426,7 @@ public class CustomSqlAggConditionTest {
                 .orderBy("lastName",OrderBySortingType.DESC)
                 .orderBy(new CountAggregator("firstName"), OrderBySortingType.ASC )
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE), FIRST_NAME from candidate  GROUP BY LAST_NAME  HAVING COUNT(FIRST_NAME)>'10'  AND BIRTH_DATE<'1999-08-05'  ORDER BY LAST_NAME DESC , COUNT(FIRST_NAME) ASC".trim(),
+        assertEquals("SELECT AVG(BIRTH_DATE), FIRST_NAME from candidate  GROUP BY LAST_NAME  HAVING  COUNT(FIRST_NAME)>'10' AND  BIRTH_DATE<'1999-08-05' ORDER BY LAST_NAME DESC , COUNT(FIRST_NAME) ASC".trim(),
                 query.trim());
 
     }

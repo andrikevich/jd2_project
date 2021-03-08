@@ -16,8 +16,7 @@ import it.academy.cv_storage.model.entity.Candidate;
 public class TestMeCustomSQl {
 	
 	@Autowired
-	static
-	CvDaoImpl dao;
+	static 	CvDaoImpl dao;
 	
 	private static Logger logger = Logger.getLogger(TestMeCustomSQl.class.getName());
 	

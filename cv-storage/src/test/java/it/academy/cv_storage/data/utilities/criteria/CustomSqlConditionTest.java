@@ -45,7 +45,7 @@ public class CustomSqlConditionTest {
 				 					 .where()
 				 					 .equal("firstName", "John")
 									 .getQuery();
-		assertEquals("SELECT * from candidate  WHERE FIRST_NAME='John'".trim(), query.trim());
+		assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John'".trim(), query.trim());
 	}
 	
 	@Test
@@ -56,7 +56,7 @@ public class CustomSqlConditionTest {
 				 					 .and()
 				 					 .gt("birthDate", "1980-02-02")
 									 .getQuery();
-		assertEquals("SELECT * from candidate  WHERE FIRST_NAME='John'  AND BIRTH_DATE>'1980-02-02'".trim(), query.trim());
+		assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02'".trim(), query.trim());
 	}
 	
 	@Test
@@ -69,7 +69,7 @@ public class CustomSqlConditionTest {
 				 					 .or()
 				 					 .notEqual("gender", Gender.МУЖЧИНА.toString())
 									 .getQuery();
-		assertEquals("SELECT * from candidate  WHERE FIRST_NAME='John'  AND BIRTH_DATE>'1980-02-02'  OR GENDER<>'МУЖЧИНА'".trim(), query.trim());
+		assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02' OR  GENDER<>'МУЖЧИНА'".trim(), query.trim());
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class CustomSqlConditionTest {
 				 					 .equal("firstName", "John")
 				 					 .orderBy("firstName", OrderBySortingType.DESC)
 									 .getQuery();
-		assertEquals("SELECT * from candidate  WHERE FIRST_NAME='John'  ORDER BY FIRST_NAME DESC".trim(), query.trim());
+		assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' ORDER BY FIRST_NAME DESC".trim(), query.trim());
 	}
 	
 	//------------------ </positive-tests> ---------------------------
@@ -123,7 +123,7 @@ public class CustomSqlConditionTest {
 									  .where()
 									  .equal("firstName", "")
 									  .getQuery();
-		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  WHERE FIRST_NAME=''".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  WHERE  FIRST_NAME=''".trim(), query.trim());
 	}
 	
 	@Test(expected = IncorrectArgumentException.class)
