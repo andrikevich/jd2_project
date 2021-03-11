@@ -30,7 +30,7 @@ public class CustomSqlSelectTest {
 	@Test
 	public void selectAllTest() throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NullClassEntityExeption  {
 		String query = customSelector.selectAllFrom(Candidate.class).getQuery();
-		assertEquals("SELECT * from candidate".trim(), query.trim());
+		assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 	
 	}
 	
@@ -59,7 +59,7 @@ public class CustomSqlSelectTest {
 	@Test
 	public void selectFromWithOneCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		String query = customSelector.selectFrom(Candidate.class,"first_name").getQuery();
-		assertEquals("SELECT FIRST_NAME from candidate".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 	
 	}
 	
@@ -75,14 +75,14 @@ public class CustomSqlSelectTest {
 	
 	@Test
 	public void selectFromWithTwoCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
-		String query = customSelector.selectFrom(Candidate.class,"first_name","lastName").getQuery();
-		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+		String query = customSelector.selectFrom(Candidate.class,"first_name","lastName","knowledgeName").getQuery();
+		assertEquals("SELECT FIRST_NAME, LAST_NAME, KNOWLEDGE_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 	
 	}
 	@Test
 	public void selectFromWithTwoCorrectParameterWithoutCase() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
 		String query = customSelector.selectFrom(Candidate.class,"fIRst_name","lastname").getQuery();
-		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 	}
 	
 	@Test(expected = IncorrectArgumentException.class)
@@ -120,7 +120,7 @@ public class CustomSqlSelectTest {
 		String query = 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")	
 					  				  .orderBy("firstName", OrderBySortingType.ASC)
 					  				  .getQuery();
-		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID ORDER BY FIRST_NAME ASC".trim(), query.trim());
 	}
 	
 	@Test
@@ -129,7 +129,7 @@ public class CustomSqlSelectTest {
 					  				  .orderBy("firstName", OrderBySortingType.ASC)
 					  				  .orderBy("lastName", OrderBySortingType.ASC)
 					  				  .getQuery();
-		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC , LAST_NAME ASC".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID ORDER BY FIRST_NAME ASC , LAST_NAME ASC".trim(), query.trim());
 	}
 	
 	@Test(expected = IncorrectArgumentException.class)

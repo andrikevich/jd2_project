@@ -79,16 +79,14 @@ public class CustomSqlAggCondition extends CustomSqlCondition{
             }
 
             ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
-            String correctParamName = classInfo.getSelectParameter(aggPar.getParamName());
+            String correctParamName = classInfo.getSelectParameter(clsFrom,aggPar.getParamName());
             StringBuilder paramSb = new StringBuilder();
             paramSb.append(aggPar.getAggrFunc())
                     .append("(")
                     .append(correctParamName)
                     .append(")")
                     .append(operator.toUpperCase())
-                    .append("'")
-                    .append(value)
-                    .append("'");
+                    .append(value);
             startQuery.append(" ").append(paramSb);
             conditionHavingStarted = true;
             paramOfQuery.add(paramSb.toString());

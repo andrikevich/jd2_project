@@ -17,12 +17,13 @@ import it.academy.cv_storage.model.entity.Candidate;
 @Repository
 public class CvDaoImpl implements CvDao {
 	
-	
+
+
 	SessionFactory factory;
 	
 	
 	@Autowired
-	public CvDaoImpl(SessionFactory factory) {
+	public CvDaoImpl(@Qualifier ("sessionFactory") SessionFactory factory) {
 		this.factory = factory;
 	}
 

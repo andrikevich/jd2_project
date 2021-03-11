@@ -1,8 +1,15 @@
 package it.academy.cv_storage.app;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import it.academy.cv_storage.config.AppConfig;
 import org.hibernate.Session;
@@ -17,13 +24,19 @@ import it.academy.cv_storage.model.entity.Phone;
 import it.academy.cv_storage.model.entity.Site;
 import it.academy.cv_storage.model.entity.Skype;
 import it.academy.cv_storage.model.utilities.Gender;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
+import javax.persistence.Column;
+import javax.persistence.OneToMany;
+
 public class Starter {
 
+
+
 	public static void main(String[] args) {
-		
+
 //		SessionFactory factory = new Configuration()
 //										.configure("hibernate.cfg.xml")
 //										.addAnnotatedClass(Candidate.class)
@@ -38,23 +51,26 @@ public class Starter {
 //
 //		try {
 //			session.beginTransaction();
-//
-////			Candidate candidate = new Candidate("Ilon","Ivanovich","Musk",Date.valueOf("1970-01-01"),Gender.МУЖЧИНА);
-////			Phone phone = new Phone("+375296000144");
-////			Site site = new Site("www.youtube.com");
-////			Email email = new Email("ilon.musk@tut.by");
-////			Skype skype = new Skype("i.musk");
-////			Knowledge knowledge = new Knowledge("Hibernate");
-////			candidate.addPhone(phone);
-////			candidate.addSite(site);
-////			candidate.addEmail(email);
-////			candidate.addSkype(skype);
-////			candidate.addKnowledge(knowledge);
-////			session.persist(candidate);
-//
+
+//			Candidate candidate = new Candidate("Ilon","Ivanovich","Musk",Date.valueOf("1970-01-01"),Gender.МУЖЧИНА);
+//			Phone phone = new Phone("+375296000144");
+//			Site site = new Site("www.youtube.com");
+//			Email email = new Email("ilon.musk@tut.by");
+//			Skype skype = new Skype("i.musk");
+//			Knowledge knowledge = new Knowledge("Hibernate");
+//			candidate.addPhone(phone);
+//			candidate.addSite(site);
+//			candidate.addEmail(email);
+//			candidate.addSkype(skype);
+//			candidate.addKnowledge(knowledge);
+//			session.persist(candidate);
+
 //			Query createQuery = session.createSQLQuery("select * from candidate where FIRST_NAME='Мария'").addEntity(Candidate.class);
 //			createQuery.list();
-//
+
+
+//			Query createQuery = session.createQuery("from Candidate where FIRST_NAME='Мария'");
+//			createQuery.list();
 //
 ////			Candidate candidate = session.get(Candidate.class, "354b0bdb-691e-11eb-8bfa-a08cfda726f3");
 ////
@@ -69,9 +85,54 @@ public class Starter {
 //			factory.close();
 //		}
 
+		String searchParam = "emailAdress";
+		Class<Candidate> clazz = Candidate.class;
+		Field[] fields = clazz.getDeclaredFields();
+//		for (Field field : fields) {
+//			if(field.isAnnotationPresent(OneToMany.class)){
+//			Class aClass = field.getAnnotation(OneToMany.class).targetEntity();
+//			System.out.println(aClass);}
+//
+//		}
 
+		String result = null;
+		String str = Arrays.stream(fields)
+				.filter(x -> x.isAnnotationPresent(OneToMany.class))
+				.map(field -> field.getAnnotation(OneToMany.class).targetEntity())
+				.map(clz->clz.getDeclaredFields())
+				.map(fld->{
+									if(Arrays.stream(fld).
+											map(field->field.getAnnotation(Column.class))
+											.filter(colunm->colunm != null)
+											.anyMatch(column ->column.name().toLowerCase().trim()
+													.equals(searchParam.toLowerCase().trim()))){
+										return searchParam.toUpperCase();
+									}
 
+									else  if(Arrays.stream(fld)
+													.anyMatch(field->field.getName()
+															.toLowerCase().trim()
+															.equals(searchParam.toLowerCase().trim())))
+												return Arrays.stream(fld).
+														map(field->field.getAnnotation(Column.class))
+														.filter(colunm->colunm != null)
+														.filter(column ->column.name().toLowerCase().trim()
+																.equals(searchParam.toLowerCase().trim()))
+														.map(column -> column.name())
+														.findFirst().get();
+									else return Arrays.stream(fld)
+												.filter(field->field.getName()
+														.toLowerCase().trim()
+														.equals(searchParam.toLowerCase().trim()))
+												.map(f->f.getName())
+												.findAny().get();
+								})
+				.filter(name->name != null)
+				.findAny().get();
 
+		System.out.println(str);
 	}
+
+
 
 }

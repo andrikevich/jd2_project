@@ -44,7 +44,12 @@ public class CustomSqlSelect extends CustomSql {
 		startQuery = new StringBuilder();
 		startQuery.append("SELECT * from").append(" ")
 				.append(classInfo.getEntityTableName())
-				.append(" ");
+				.append(" t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID")
+				.append(" LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID")
+				.append(" LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID")
+				.append(" LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID")
+				.append(" LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID")
+				.append(" JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID");
 		return this;
 		}else 
 			throw new StartSqlSentenceExeption(
@@ -81,7 +86,12 @@ public class CustomSqlSelect extends CustomSql {
 		
 		startQuery.append("from").append(" ")
 					.append(classInfo.getEntityTableName())
-					.append(" ");
+					.append(" t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID")
+					.append(" LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID")
+					.append(" LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID")
+					.append(" LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID")
+					.append(" LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID")
+					.append(" JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID");
 		return this;
 		}else 
 			throw new StartSqlSentenceExeption(
@@ -135,7 +145,13 @@ public class CustomSqlSelect extends CustomSql {
 
 			startQuery.append(" from").append(" ")
 					.append(classInfo.getEntityTableName())
-					.append(" ");
+					.append(classInfo.getEntityTableName())
+					.append(" t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID")
+					.append(" LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID")
+					.append(" LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID")
+					.append(" LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID")
+					.append(" LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID")
+					.append(" JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID");
 			return this;
 		}else
 			throw new StartSqlSentenceExeption(
@@ -212,7 +228,7 @@ public class CustomSqlSelect extends CustomSql {
 
 		if(startQuery!= null && startQuery.toString().length() !=0 ) {
 			ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
-			String correctParamName = classInfo.getSelectParameter(field);
+			String correctParamName = classInfo.getSelectParameter(clsFrom,field);
 			
 			if(sortingType == null) {
 				throw new IncorrectArgumentException(
@@ -246,7 +262,7 @@ public class CustomSqlSelect extends CustomSql {
 
 		if(startQuery!= null && startQuery.toString().length() !=0 ) {
 			ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
-			String correctParamName = classInfo.getSelectParameter(aggPar.getParamName());
+			String correctParamName = classInfo.getSelectParameter(clsFrom,aggPar.getParamName());
 
 			if(sortingType == null) {
 				throw new IncorrectArgumentException(
@@ -297,7 +313,7 @@ public class CustomSqlSelect extends CustomSql {
 
 		if(startQuery!= null && startQuery.toString().length() !=0 ) {
 			ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
-			String correctParamName = classInfo.getSelectParameter(field);
+			String correctParamName = classInfo.getSelectParameter(clsFrom,field);
 
 
 			if(!isGroupByPresent) {

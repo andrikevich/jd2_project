@@ -47,23 +47,23 @@ public class Candidate implements Serializable {
 	private Gender gender;
 
 	@OneToMany(mappedBy = "candidate", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH })
+			CascadeType.REFRESH },targetEntity = Phone.class)
 	private Set<Phone> phones;
 
 	@OneToMany(mappedBy = "candidate", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH })
+			CascadeType.REFRESH },targetEntity = Site.class)
 	private Set<Site> sites;
 
 	@OneToMany(mappedBy = "candidate", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH })
+			CascadeType.REFRESH },targetEntity = Email.class)
 	private Set<Email> emails;
 
 	@OneToMany(mappedBy = "candidate", cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,
-			CascadeType.REFRESH })
+			CascadeType.REFRESH },targetEntity = Skype.class)
 	private Set<Skype> skypes;
 
 	@ManyToMany (cascade = {CascadeType.DETACH,CascadeType.MERGE,
-			CascadeType.PERSIST,CascadeType.REFRESH})
+			CascadeType.PERSIST,CascadeType.REFRESH},targetEntity = Knowledge.class)
 	@JoinTable(
 			name = "candidate_knowledge",
 			joinColumns = @JoinColumn(name = "CANDIDATE_ID"	),

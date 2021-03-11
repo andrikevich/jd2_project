@@ -34,45 +34,22 @@ public class AppConfig {
 	public DataSource dataSource() {
 		
 		// create connection pool
-		ComboPooledDataSource dataSource
-									= new ComboPooledDataSource();
-				
-		// set the jdbc driver class
-		
+		ComboPooledDataSource dataSource = new ComboPooledDataSource();
+
 		try {
 			dataSource.setDriverClass(env.getProperty("jdbc.driver"));
 		} catch (PropertyVetoException exc) {
 			throw new RuntimeException(exc);
 		}
-		
-		// log the connection props
-		// for sanity's sake, log this info
-		// just to make sure we are REALLY reading data from properties file
-		
 		logger.info(">>> jdbc.url=" + env.getProperty("jdbc.url"));
 		logger.info(">>> jdbc.user=" + env.getProperty("jdbc.user"));
-		
-		
-		// set database connection props
-		
 		dataSource.setJdbcUrl(env.getProperty("jdbc.url"));
 		dataSource.setUser(env.getProperty("jdbc.user"));
 		dataSource.setPassword(env.getProperty("jdbc.password"));
-		
-		// set connection pool props
-		
-		dataSource.setInitialPoolSize(
-				getIntProperty("connection.pool.initialPoolSize"));
-
-		dataSource.setMinPoolSize(
-				getIntProperty("connection.pool.minPoolSize"));
-
-		dataSource.setMaxPoolSize(
-				getIntProperty("connection.pool.maxPoolSize"));
-
-		dataSource.setMaxIdleTime(
-				getIntProperty("connection.pool.maxIdleTime"));
-		
+		dataSource.setInitialPoolSize(getIntProperty("connection.pool.initialPoolSize"));
+		dataSource.setMinPoolSize(getIntProperty("connection.pool.minPoolSize"));
+		dataSource.setMaxPoolSize(getIntProperty("connection.pool.maxPoolSize"));
+		dataSource.setMaxIdleTime(getIntProperty("connection.pool.maxIdleTime"));
 		return dataSource;
 	}
 	
@@ -80,25 +57,17 @@ public class AppConfig {
 	// read environment property and convert to int
 	
 	private int getIntProperty(String propName) {
-		
 		String propVal = env.getProperty(propName);
-		
-		// now convert to int
 		int intPropVal = Integer.parseInt(propVal);
-		
 		return intPropVal;
 	}
 
 
 	
 	private Properties getHibernateProperties() {
-
-		// set hibernate properties
 		Properties props = new Properties();
-		
 		props.setProperty("hibernate.dialect", env.getProperty("hibernate.dialect"));
 		props.setProperty("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
-		
 		return props;				
 	}
 	

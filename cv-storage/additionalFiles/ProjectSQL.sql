@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS  `cv_storage`.`candidate` (
 
 CREATE TABLE IF NOT EXISTS  `cv_storage`. `email` (
   `EMAIL_ID` varchar(255) NOT NULL,
-  `EMAIL_ADRESS` varchar(255) DEFAULT NULL,
+  `EMAIL_ADDRESS` varchar(255) DEFAULT NULL,
   `CANDIDATE_ID` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`EMAIL_ID`),
   
@@ -85,7 +85,7 @@ CREATE TABLE  IF NOT EXISTS `cv_storage`.`candidate_knowledge` (
 
 
 
-INSERT IGNORE INTO `cv_storage`.`candidate` (ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BIRTH_DATE, GENDER) 
+INSERT IGNORE INTO `cv_storage`.`candidate` (ID,LAST_NAME, FIRST_NAME, MIDDLE_NAME,  BIRTH_DATE, GENDER)
 VALUES 
 		('3cbd2faf-691c-11eb-8bfa-a08cfda726f3', 'Петров', 'Петр', 'Петрович', '1986-12-12', 'МУЖЧИНА'),
         ('354b0bdb-691e-11eb-8bfa-a08cfda726f3', 'Иванов', 'Иван', 'Иванович', '1997-04-04', 'МУЖЧИНА'),

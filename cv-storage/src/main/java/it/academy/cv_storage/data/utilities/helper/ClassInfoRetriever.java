@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import it.academy.cv_storage.data.utilities.criteria.agregation.Aggregator;
@@ -49,54 +52,84 @@ public class ClassInfoRetriever {
 
 	public List<String> getSelectParameters(String... searchParam) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException {
 		List <String> result = new LinkedList<String>();
-		Field[] fields = className.getDeclaredFields();
-		
-		if(className != null) {
-			for(String param : searchParam) {
-				
-				if (param == null) {
+
+				if ( searchParam== null) {
 					throw new IncorrectArgumentException(
 							"There is a null in a parameter array");
 				}
-				
-				/*  If inputed by user parameter is in @annotation of field/column of class
-				 * it will return name of this annotation
-				 * else it return field name from class*/
-				if(Arrays.stream(fields)
-						 .map(field->field.getAnnotation(Column.class))
-						 .filter(colunm->colunm != null)
-						 .anyMatch(column ->column.name().toLowerCase().trim()
-								 				.equals(param.toLowerCase().trim()))) {
-					result.add(param.toUpperCase());
-				} else if(Arrays.stream(fields)
-								.anyMatch(field->field.getName()
-										.toLowerCase().trim()
-										.equals(param.toLowerCase().trim()))) {
-					Field field = findFieldIgnoreCase(className, param);
-					Column colAnnot = field.getAnnotation(Column.class);
-					if (colAnnot != null) {
-						result.add(colAnnot.name().toUpperCase());
-					}else
-					result.add(field.getName().toUpperCase());					
-				}else 
-					throw new IncorrectArgumentException(
-						"There were inputed incorrect parameter for SQL query. Inserted parameter: <<<" + param + ">>>");
-				
-			}
-			
 
-			return result;
+		for (String tmpParam : searchParam) {
+
+			result.add(getSelectParameter(className,tmpParam));
 		}
-		throw new StartSqlSentenceExeption("You haven't insert class nafe to search from");
+			return result;
 
 
-		
+
+
 	}
+
+//	public List<String> getSelectParameters(String... searchParam) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException {
+//		List <String> result = new LinkedList<String>();
+//
+//
+//		Field[] fields = className.getDeclaredFields();
+//
+//		if(className != null) {
+//			for(String param : searchParam) {
+//
+//				if (param == null) {
+//					throw new IncorrectArgumentException(
+//							"There is a null in a parameter array");
+//				}
+//
+//				/*  If inputed by user parameter is in @annotation of field/column of class
+//				 * it will return name of this annotation
+//				 * else it return field name from class*/
+//				if(Arrays.stream(fields)
+//						 .map(field->field.getAnnotation(Column.class))
+//						 .filter(colunm->colunm != null)
+//						 .anyMatch(column ->column.name().toLowerCase().trim()
+//								 				.equals(param.toLowerCase().trim()))) {
+//					result.add(param.toUpperCase());
+//				} else if(Arrays.stream(fields)
+//								.anyMatch(field->field.getName()
+//										.toLowerCase().trim()
+//										.equals(param.toLowerCase().trim()))) {
+//					Field field = findFieldIgnoreCase(className, param);
+//					Column colAnnot = field.getAnnotation(Column.class);
+//					if (colAnnot != null) {
+//						result.add(colAnnot.name().toUpperCase());
+//					}else
+//					result.add(field.getName().toUpperCase());
+//				}else
+//					throw new IncorrectArgumentException(
+//						"There were inputed incorrect parameter for SQL query. Inserted parameter: <<<" + param + ">>>");
+//
+//			}
+//
+//
+//			return result;
+//		}
+//		throw new StartSqlSentenceExeption("You haven't insert class nafe to search from");
+//
+//
+//
+//	}
 	
 	
-	public String getSelectParameter(String searchParam) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException {
+	public String getSelectParameter(Class className,String searchParam) throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException {
 		
 		Field[] fields = className.getDeclaredFields();
+		List<Class> classesWithOneOrManyToMany = Arrays.stream(fields)
+				.filter(x -> x.isAnnotationPresent(OneToMany.class) )
+				.map(field -> field.getAnnotation(OneToMany.class).targetEntity())
+				.collect(Collectors.toList());
+
+		classesWithOneOrManyToMany.addAll(Arrays.stream(fields)
+				.filter(x -> x.isAnnotationPresent(ManyToMany.class) )
+				.map(field -> field.getAnnotation(ManyToMany.class).targetEntity())
+				.collect(Collectors.toList()));
 		
 		if(className != null) {
 			
@@ -109,13 +142,15 @@ public class ClassInfoRetriever {
 				/*  If inputed by user parameter is in @annotation of field/column of class
 				 * it will return name of this annotation
 				 * else it return field name from class*/
+
+			//looking for correct annotation
 				if(Arrays.stream(fields)
 						 .map(field->field.getAnnotation(Column.class))
 						 .filter(colunm->colunm != null)
 						 .anyMatch(column ->column.name().toLowerCase().trim()
 								 				.equals(searchParam.toLowerCase().trim()))) {
 					return searchParam.toUpperCase();
-				} else if(Arrays.stream(fields)
+				} else if(Arrays.stream(fields) // looking for correct field in class
 								.anyMatch(field->field.getName()
 										.toLowerCase().trim()
 										.equals(searchParam.toLowerCase().trim()))) {
@@ -129,14 +164,29 @@ public class ClassInfoRetriever {
 						return colAnnot.name().toUpperCase();
 					}else
 					return field.getName().toUpperCase();					
-				}else 
+				}else if(classesWithOneOrManyToMany.stream().anyMatch(clz->isSuchFieldInClass(clz,searchParam))) {
+
+
+
+
+					Class classWithParam = classesWithOneOrManyToMany.stream()
+																			.filter(clz -> isSuchFieldInClass(clz, searchParam))
+																			.findFirst()
+																			.get();
+					//recursive for one to many
+				 return 	getSelectParameter(classWithParam,searchParam);
+				}
 					throw new IncorrectArgumentException(
 						"There were inputed incorrect parameter for SQL query. Inserted parameter: <<<" + searchParam + ">>>");
 		}else
 				throw new StartSqlSentenceExeption("You haven't insert class name to search from");
 	}
 
+private String helper(Class clazz, String searchParam){
 
+
+		return"";
+}
 	
 	private Field findFieldIgnoreCase(Class<?> clazz, String fieldName) throws SecurityException, NoSuchFieldException {
 	    try {
@@ -200,5 +250,19 @@ public class ClassInfoRetriever {
 			result.add(getSelectAggParameter(aggregator));
 		}
 		return result;
+	}
+
+
+	//---------------
+	private   boolean isSuchFieldInClass(Class clazz, String searchParam){
+		Field[] fields = clazz.getDeclaredFields();
+		final boolean isCorrectAnnot = Arrays.stream(fields).map(field -> field.getAnnotation(Column.class))
+				.filter(colunm -> colunm != null)
+				.anyMatch(column -> column.name().toLowerCase().trim()
+						.equals(searchParam.toLowerCase().trim()));
+		boolean isFieldIsPresent = Arrays.stream(fields).anyMatch(field -> field.getName()
+				.toLowerCase().trim()
+				.equals(searchParam.toLowerCase().trim()));
+		return ( isCorrectAnnot || isFieldIsPresent);
 	}
 }

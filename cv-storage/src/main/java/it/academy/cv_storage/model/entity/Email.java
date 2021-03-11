@@ -31,21 +31,21 @@ public class Email implements Serializable{
 	@Column(name="EMAIL_ID")
 	private String emailId;
 	
-	@Column(name="EMAIL_ADRESS")
-	private String emailAdress;
+	@Column(name="EMAIL_ADDRESS")
+	private String emailAddress;
 	
 	@ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,
 			  CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name="CANDIDATE_ID")
 	private Candidate candidate;
 
-	public Email(String emailAdress) {
-		this.emailAdress = emailAdress;
+	public Email(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 
 	@Override
 	public String toString() {
-		return "emailAdress=" + emailAdress;
+		return "emailAdress=" + emailAddress;
 	}
 	
 

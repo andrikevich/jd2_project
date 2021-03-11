@@ -31,7 +31,7 @@ public class CustomSqlConditionTest {
 	@Test
 	public void selectFromWithTwoCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption {
 		String query = customSelector.selectFrom(Candidate.class,"first_name","lastName").getQuery();
-		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 
 	}
 
@@ -45,7 +45,7 @@ public class CustomSqlConditionTest {
 				 					 .where()
 				 					 .equal("firstName", "John")
 									 .getQuery();
-		assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John'".trim(), query.trim());
+		assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME='John'".trim(), query.trim());
 	}
 	
 	@Test
@@ -56,7 +56,7 @@ public class CustomSqlConditionTest {
 				 					 .and()
 				 					 .gt("birthDate", "1980-02-02")
 									 .getQuery();
-		assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02'".trim(), query.trim());
+		assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02'".trim(), query.trim());
 	}
 	
 	@Test
@@ -69,7 +69,7 @@ public class CustomSqlConditionTest {
 				 					 .or()
 				 					 .notEqual("gender", Gender.МУЖЧИНА.toString())
 									 .getQuery();
-		assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02' OR  GENDER<>'МУЖЧИНА'".trim(), query.trim());
+		assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02' OR  GENDER<>'МУЖЧИНА'".trim(), query.trim());
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class CustomSqlConditionTest {
 				 					 .equal("firstName", "John")
 				 					 .orderBy("firstName", OrderBySortingType.DESC)
 									 .getQuery();
-		assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' ORDER BY FIRST_NAME DESC".trim(), query.trim());
+		assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME='John' ORDER BY FIRST_NAME DESC".trim(), query.trim());
 	}
 	
 	//------------------ </positive-tests> ---------------------------
@@ -123,7 +123,7 @@ public class CustomSqlConditionTest {
 									  .where()
 									  .equal("firstName", "")
 									  .getQuery();
-		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  WHERE  FIRST_NAME=''".trim(), query.trim());
+		assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME=''".trim(), query.trim());
 	}
 	
 	@Test(expected = IncorrectArgumentException.class)

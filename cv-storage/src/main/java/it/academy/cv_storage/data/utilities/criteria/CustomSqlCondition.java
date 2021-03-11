@@ -108,7 +108,7 @@ return conditionCreate(paramName, wildcard, " LIKE ");
 			}
 			
 			ClassInfoRetriever classInfo = new ClassInfoRetriever(clsFrom);
-			String correctParamName = classInfo.getSelectParameter(paramName);
+			String correctParamName = classInfo.getSelectParameter(clsFrom,paramName);
 			StringBuilder paramSb = new StringBuilder();
 			paramSb.append(correctParamName)
 					.append(operator.toUpperCase())

@@ -38,7 +38,7 @@ public class CustomSqlAggConditionTest {
     @Test
     public void selectAllTest() throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NullClassEntityExeption  {
         String query = customSelector.selectAllFrom(Candidate.class).getQuery();
-        assertEquals("SELECT * from candidate".trim(), query.trim());
+        assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 
     }
 
@@ -67,7 +67,7 @@ public class CustomSqlAggConditionTest {
     @Test
     public void selectFromWithOneCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
         String query = customSelector.selectFrom(Candidate.class,"first_name").getQuery();
-        assertEquals("SELECT FIRST_NAME from candidate".trim(), query.trim());
+        assertEquals("SELECT FIRST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 
     }
 
@@ -84,13 +84,13 @@ public class CustomSqlAggConditionTest {
     @Test
     public void selectFromWithTwoCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
         String query = customSelector.selectFrom(Candidate.class,"first_name","lastName").getQuery();
-        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 
     }
     @Test
     public void selectFromWithTwoCorrectParameterWithoutCase() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption  {
         String query = customSelector.selectFrom(Candidate.class,"fIRst_name","lastname").getQuery();
-        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
     }
 
     @Test(expected = IncorrectArgumentException.class)
@@ -128,7 +128,7 @@ public class CustomSqlAggConditionTest {
         String query = 	customSelector.selectFrom(Candidate.class,"fIRst_name","lastname")
                 .orderBy("firstName", OrderBySortingType.ASC)
                 .getQuery();
-        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC".trim(), query.trim());
+        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID ORDER BY FIRST_NAME ASC".trim(), query.trim());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class CustomSqlAggConditionTest {
                 .orderBy("firstName", OrderBySortingType.ASC)
                 .orderBy("lastName", OrderBySortingType.ASC)
                 .getQuery();
-        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  ORDER BY FIRST_NAME ASC , LAST_NAME ASC".trim(), query.trim());
+        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID ORDER BY FIRST_NAME ASC , LAST_NAME ASC".trim(), query.trim());
     }
 
     @Test(expected = IncorrectArgumentException.class)
@@ -179,7 +179,7 @@ public class CustomSqlAggConditionTest {
                 .where()
                 .equal("firstName", "John")
                 .getQuery();
-        assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John'".trim(), query.trim());
+        assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME='John'".trim(), query.trim());
     }
 
     @Test
@@ -190,7 +190,7 @@ public class CustomSqlAggConditionTest {
                 .and()
                 .gt("birthDate", "1980-02-02")
                 .getQuery();
-        assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02'".trim(), query.trim());
+        assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02'".trim(), query.trim());
     }
 
     @Test
@@ -203,7 +203,7 @@ public class CustomSqlAggConditionTest {
                 .or()
                 .notEqual("gender", Gender.МУЖЧИНА.toString())
                 .getQuery();
-        assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02' OR  GENDER<>'МУЖЧИНА'".trim(), query.trim());
+        assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME='John' AND  BIRTH_DATE>'1980-02-02' OR  GENDER<>'МУЖЧИНА'".trim(), query.trim());
     }
 
     @Test
@@ -213,7 +213,7 @@ public class CustomSqlAggConditionTest {
                 .equal("firstName", "John")
                 .orderBy("firstName", OrderBySortingType.DESC)
                 .getQuery();
-        assertEquals("SELECT * from candidate  WHERE  FIRST_NAME='John' ORDER BY FIRST_NAME DESC".trim(), query.trim());
+        assertEquals("SELECT * from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME='John' ORDER BY FIRST_NAME DESC".trim(), query.trim());
     }
 
     //------------------ </positive-tests> ---------------------------
@@ -251,7 +251,7 @@ public class CustomSqlAggConditionTest {
                 .where()
                 .equal("firstName", "")
                 .getQuery();
-        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate  WHERE  FIRST_NAME=''".trim(), query.trim());
+        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID WHERE  FIRST_NAME=''".trim(), query.trim());
     }
 
     @Test(expected = IncorrectArgumentException.class)
@@ -333,7 +333,7 @@ public class CustomSqlAggConditionTest {
     @Test
     public void selectFromAggWithTwoCorrectParameter() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, IncorrectArgumentException, NullClassEntityExeption {
         String query = customSelector.selectFrom(Candidate.class,"first_name","lastName").getQuery();
-        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+        assertEquals("SELECT FIRST_NAME, LAST_NAME from candidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 
     }
 
@@ -342,7 +342,7 @@ public class CustomSqlAggConditionTest {
         String query = customSelector.selectWithAggregationFrom(
                 Candidate.class,new AvgAggregator("birthDATE"),"first_name","lastName")
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE), FIRST_NAME, LAST_NAME from candidate".trim(), query.trim());
+        assertEquals("SELECT AVG(BIRTH_DATE), FIRST_NAME, LAST_NAME from candidatecandidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 
     }
 
@@ -353,7 +353,7 @@ public class CustomSqlAggConditionTest {
                 List.of(new AvgAggregator("birthDATE"),new CountAggregator("lastName")),
                 "first_name")
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE), COUNT(LAST_NAME), FIRST_NAME from candidate".trim(), query.trim());
+        assertEquals("SELECT AVG(BIRTH_DATE), COUNT(LAST_NAME), FIRST_NAME from candidatecandidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 
     }
 
@@ -362,7 +362,7 @@ public class CustomSqlAggConditionTest {
         String query = customSelector.selectWithAggregationFrom(
                 Candidate.class,new AvgAggregator("birthDATE"))
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE)  from candidate".trim(), query.trim());
+        assertEquals("SELECT AVG(BIRTH_DATE)  from candidatecandidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID".trim(), query.trim());
 
     }
 
@@ -372,7 +372,7 @@ public class CustomSqlAggConditionTest {
                 Candidate.class,new AvgAggregator("birthDATE"))
                 .groupBy("lastName")
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE)  from candidate  GROUP BY LAST_NAME".trim(), query.trim());
+        assertEquals("SELECT AVG(BIRTH_DATE)  from candidatecandidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID GROUP BY LAST_NAME".trim(), query.trim());
 
     }
     @Test
@@ -382,7 +382,7 @@ public class CustomSqlAggConditionTest {
                 .groupBy("lastName")
                 .groupBy("firstname")
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE)  from candidate  GROUP BY LAST_NAME , FIRST_NAME".trim(), query.trim());
+        assertEquals("SELECT AVG(BIRTH_DATE)  from candidatecandidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID GROUP BY LAST_NAME , FIRST_NAME".trim(), query.trim());
 
     }
 
@@ -394,7 +394,7 @@ public class CustomSqlAggConditionTest {
                 .having()
                 .gt("birthDate","1970-08-05")
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE)  from candidate  GROUP BY LAST_NAME  HAVING  BIRTH_DATE>'1970-08-05'".trim(),
+        assertEquals("SELECT AVG(BIRTH_DATE)  from candidatecandidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID GROUP BY LAST_NAME  HAVING  BIRTH_DATE>'1970-08-05'".trim(),
                     query.trim());
 
     }
@@ -409,7 +409,7 @@ public class CustomSqlAggConditionTest {
                 .and()
                 .lt("birthDate","1999-08-05")
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE)  from candidate  GROUP BY LAST_NAME  HAVING  BIRTH_DATE>'1970-08-05' AND  BIRTH_DATE<'1999-08-05'".trim(),
+        assertEquals("SELECT AVG(BIRTH_DATE)  from candidatecandidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID GROUP BY LAST_NAME  HAVING  BIRTH_DATE>'1970-08-05' AND  BIRTH_DATE<'1999-08-05'".trim(),
                 query.trim());
 
     }
@@ -426,7 +426,7 @@ public class CustomSqlAggConditionTest {
                 .orderBy("lastName",OrderBySortingType.DESC)
                 .orderBy(new CountAggregator("firstName"), OrderBySortingType.ASC )
                 .getQuery();
-        assertEquals("SELECT AVG(BIRTH_DATE), FIRST_NAME from candidate  GROUP BY LAST_NAME  HAVING  COUNT(FIRST_NAME)>'10' AND  BIRTH_DATE<'1999-08-05' ORDER BY LAST_NAME DESC , COUNT(FIRST_NAME) ASC".trim(),
+        assertEquals("SELECT AVG(BIRTH_DATE), FIRST_NAME from candidatecandidate t0 LEFT JOIN skype t1 ON t0.ID=t1.CANDIDATE_ID LEFT JOIN email t2 ON t0.ID=t2.CANDIDATE_ID LEFT JOIN phone t3 ON t0.ID=t3.CANDIDATE_ID LEFT JOIN site t4 ON t0.ID=t4.CANDIDATE_ID LEFT JOIN candidate_knowledge t5 ON t0.ID=t5.CANDIDATE_ID JOIN knowledge t6 ON t5.KNOWLEDGE_ID = t6.KNOWLEDGE_ID GROUP BY LAST_NAME  HAVING  COUNT(FIRST_NAME)>10 AND  BIRTH_DATE<'1999-08-05' ORDER BY LAST_NAME DESC , COUNT(FIRST_NAME) ASC".trim(),
                 query.trim());
 
     }
