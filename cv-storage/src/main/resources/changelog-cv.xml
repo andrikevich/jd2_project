@@ -36,7 +36,7 @@
 			CREATE TABLE IF NOT EXISTS `cv_storage`. `email` (
 			`EMAIL_ID`
 			varchar(255) NOT NULL,
-			`EMAIL_ADSRESS` varchar(255) DEFAULT NULL,
+			`EMAIL_ADDRESS` varchar(255) DEFAULT NULL,
 			`CANDIDATE_ID` varchar(255) DEFAULT NULL,
 			PRIMARY KEY (`EMAIL_ID`),
 

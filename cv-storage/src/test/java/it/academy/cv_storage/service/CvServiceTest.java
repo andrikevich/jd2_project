@@ -71,7 +71,7 @@ public class CvServiceTest {
 
 	@Test
 	@Transactional
-	public void test3() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption, FinishSqlSentenceExeption {
+	public void serviceWithJoin() throws NoSuchFieldException, SecurityException, StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption, FinishSqlSentenceExeption {
 		String sqlQuery = sqlCreator.selectAllFrom(Candidate.class)
 				.where()
 				.like("lastName", "%ов")
@@ -84,7 +84,8 @@ public class CvServiceTest {
 		List<Candidate> candidates = service.getCandidateBySql(sqlQuery);
 		logger.info(">>> Result of Query: " + candidates);
 		logger.info("\n\n>>>> Search parameters: " + sqlCreator.getParamOfQuery() + "\n");
-
+		assertNotNull(candidates);
+		assertEquals(1,candidates.size());
 
 	}
 }

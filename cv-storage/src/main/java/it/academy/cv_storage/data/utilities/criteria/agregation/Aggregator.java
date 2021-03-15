@@ -9,9 +9,9 @@ private String aggrFunc;
 
    public Aggregator(String paramName) throws IncorrectArgumentException {
       if(paramName == null )
-         throw new IncorrectArgumentException("Argument of agregate function can't be null");
+         throw new IncorrectArgumentException("Argument of aggregate function can't be null");
       if(paramName.trim().length()==0)
-         throw new IncorrectArgumentException("Argument of agregate function can't be empty");
+         throw new IncorrectArgumentException("Argument of aggregate function can't be empty");
 
       this.paramName = paramName;
    }

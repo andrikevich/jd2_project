@@ -46,9 +46,9 @@ public class TestMeCustomSQl {
 			CustomSqlSelect customSql3 = new CustomSqlSelect();
 			String query3 = customSql3.selectFrom(Candidate.class,"firstName","middle_name")
 										.where()
-										.equal("firstName", "John")
+										.equal("firstName", "Иван")
 										.or()
-										.gt("lastName", "Brown")
+										.gt("lastName", "Иванов")
 										.orderBy("firstName", OrderBySortingType.ASC)
 										.getQuery();
 			System.out.println(query3);
@@ -73,8 +73,8 @@ public class TestMeCustomSQl {
 
 
 			System.out.println(customSql4.getParamOfQuery());
-			
-			
+
+
 			
 		} catch (StartSqlSentenceExeption | ClassHasNoCorrectAnnotation | NoSuchFieldException | SecurityException | IncorrectArgumentException | NullClassEntityExeption | FinishSqlSentenceExeption e) {
 			// TODO Auto-generated catch block

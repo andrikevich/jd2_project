@@ -23,19 +23,14 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 @PropertySource("classpath:mysql.properties")
 public class AppConfig {
 	
-	//to get property from Resource file
 		@Autowired
 		Environment env;
-		
-		// set up a logger for diagnostics
+
 		private Logger logger = Logger.getLogger(getClass().getName());
 	
 	@Bean
 	public DataSource dataSource() {
-		
-		// create connection pool
-		ComboPooledDataSource dataSource = new ComboPooledDataSource();
-
+				ComboPooledDataSource dataSource = new ComboPooledDataSource();
 		try {
 			dataSource.setDriverClass(env.getProperty("jdbc.driver"));
 		} catch (PropertyVetoException exc) {
@@ -52,17 +47,13 @@ public class AppConfig {
 		dataSource.setMaxIdleTime(getIntProperty("connection.pool.maxIdleTime"));
 		return dataSource;
 	}
-	
-	// need a helper method 
-	// read environment property and convert to int
+
 	
 	private int getIntProperty(String propName) {
 		String propVal = env.getProperty(propName);
 		int intPropVal = Integer.parseInt(propVal);
 		return intPropVal;
 	}
-
-
 	
 	private Properties getHibernateProperties() {
 		Properties props = new Properties();
@@ -71,32 +62,20 @@ public class AppConfig {
 		return props;				
 	}
 	
-	
-	
-	
-	
 	@Bean
 	public LocalSessionFactoryBean sessionFactory(){
-		
-		// create session factorys
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-		
-		// set the properties
 		sessionFactory.setDataSource(dataSource());
 		sessionFactory.setPackagesToScan(env.getProperty("hibernate.packagesToScan"));
 		sessionFactory.setHibernateProperties(getHibernateProperties());
-		
 		return sessionFactory;
 	}
 	
 	@Bean
 	@Autowired
 	public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) {
-		
-		// setup transaction manager based on session factory
 		HibernateTransactionManager txManager = new HibernateTransactionManager();
 		txManager.setSessionFactory(sessionFactory);
-
 		return txManager;
 	}	  
 

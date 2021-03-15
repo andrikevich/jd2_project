@@ -62,7 +62,7 @@ public class CustomSqlSelect extends CustomSql {
 					throws StartSqlSentenceExeption, ClassHasNoCorrectAnnotation, NoSuchFieldException, SecurityException, IncorrectArgumentException, NullClassEntityExeption {
 		if(isSelectPresent){
 			throw new StartSqlSentenceExeption(
-					"Second usage SELECT is not permit. If you tried subquery create a new instance of customSQL");
+					"Second usage SELECT is not permit. If you tried subquery, create a new instance of customSQL");
 		}
 
 		if(searchParam == null) {
@@ -100,6 +100,7 @@ public class CustomSqlSelect extends CustomSql {
 	}
 
 	//SELECT AggFunc(searchParam1) searchParam1, searchParam2 ... from tableWithClassName
+	// applied several aggregation functions(List)
 	public <T> CustomSqlSelect selectWithAggregationFrom(
 			Class<T> clsFrom, List<Aggregator> aggregators, String...searchParam) throws StartSqlSentenceExeption, IncorrectArgumentException, ClassHasNoCorrectAnnotation, NullClassEntityExeption, NoSuchFieldException {
 		if(isSelectPresent){
@@ -131,7 +132,7 @@ public class CustomSqlSelect extends CustomSql {
 					.map(x->x.toUpperCase())
 					.collect(Collectors.joining(", ","","")));
 
-			// add regular (non aggregate) filds to select sentence
+			// add regular (non aggregate) fields to select sentence
 			if(searchParam.length == 0) {
 				//if searchParam haven't been inputted it would be only agg parameters
 				startQuery.append(" ");
@@ -158,7 +159,8 @@ public class CustomSqlSelect extends CustomSql {
 					"The beginning of SQL query is not correct. It should start from SELECT ...");
 
 	}
-
+	//SELECT AggFunc(searchParam1) searchParam1, searchParam2 ... from tableWithClassName
+	// applied single  aggregation function and param
 	public <T> CustomSqlSelect selectWithAggregationFrom(Class<T> clsFrom, Aggregator aggregator, String...searchParam)
 			throws NoSuchFieldException, IncorrectArgumentException, NullClassEntityExeption, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation {
 		if(aggregator == null)
@@ -166,6 +168,7 @@ public class CustomSqlSelect extends CustomSql {
 		return selectWithAggregationFrom(clsFrom,List.of(aggregator),searchParam);
 	}
 
+	// applied single  aggregation function
 	public <T> CustomSqlSelect selectWithAggregationFrom(Class<T> clsFrom, Aggregator aggregator)
 			throws NoSuchFieldException, IncorrectArgumentException, NullClassEntityExeption, StartSqlSentenceExeption, ClassHasNoCorrectAnnotation {
 		if(aggregator == null)
